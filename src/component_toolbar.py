@@ -25,6 +25,7 @@ class ToolbarButton(QPushButton):
             """
         )
 
+
 class ToolbarTitle(QLabel):
     def __init__(self, toolbar_title):
         super().__init__()
@@ -37,6 +38,7 @@ class ToolbarTitle(QLabel):
             """
         )
         self.setAlignment(Qt.AlignCenter)
+
 
 class ToolbarComponent(QWidget):
     def __init__(self, screen_title, prev_screen_button_title="", parent=None):
@@ -52,7 +54,7 @@ class ToolbarComponent(QWidget):
         self.setFixedHeight(int(0.05*screen_info.width()))
 
         self.toolbar_layout = QHBoxLayout()
-        self.toolbar_layout.setContentsMargins(0,0,0,0)
+        self.toolbar_layout.setContentsMargins(0, 0, 0, 0)
 
         if prev_screen_button_title != "":
             self.prev_screen_button = ToolbarButton(prev_screen_button_title)

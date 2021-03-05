@@ -31,7 +31,6 @@ class HomeScreen(QWidget):
 
         self.setLayout(home_screen_layout)
 
-
     def OnClickPowerOffButton(self):
         sys.exit()
 
