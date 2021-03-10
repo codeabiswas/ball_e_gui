@@ -1,5 +1,3 @@
-import csv
-import os
 import pathlib
 import sys
 from pathlib import Path
@@ -124,25 +122,27 @@ class GoalieProfilesScreen(QWidget):
             'Name: {}'.format(goalie_name.replace('_', ' ').title())))
 
         table_view = QTableWidget()
-        drill_names = list()
         table_view.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         goalie_info = self.profiler.get_profile_info(goalie_profile_path)
 
         counter = 0
         table_view.setRowCount(len(goalie_info))
-        table_view.setColumnCount(1)
+        table_view.setColumnCount(2)
         for drill_info, date_info in zip(goalie_info.keys(), goalie_info.values()):
-            drill_names.append(drill_info)
+            drill_name_widget = QTableWidgetItem(drill_info)
             date_info_widget = QTableWidgetItem(date_info)
             some_font = QFont()
             some_font.setPixelSize(int(sc.FONT_M[:2]))
+            drill_name_widget.setFont(some_font)
             date_info_widget.setFont(some_font)
+            drill_name_widget.setTextAlignment(Qt.AlignCenter)
             date_info_widget.setTextAlignment(Qt.AlignCenter)
-            table_view.setItem(counter, 0, date_info_widget)
+            table_view.setItem(counter, 0, drill_name_widget)
+            table_view.setItem(counter, 1, date_info_widget)
             counter += 1
-        table_view.setHorizontalHeaderLabels(["Date Performed"])
-        table_view.setVerticalHeaderLabels(drill_names)
-        table_view.horizontalHeader().setStretchLastSection(True)
+        table_view.setHorizontalHeaderLabels(
+            ["Drill History", "Date Performed"])
+        table_view.verticalHeader().setVisible(False)
 
         table_view.horizontalHeader().setStyleSheet(
             """
@@ -155,6 +155,8 @@ class GoalieProfilesScreen(QWidget):
             font-size: {font_size}
             """.format(font_size=sc.FONT_M)
         )
+
+        table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         modal_layout.addWidget(table_view)
 
