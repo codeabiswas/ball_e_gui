@@ -1,6 +1,7 @@
 import sys
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (QApplication, QListWidget, QListWidgetItem,
                              QMessageBox, QPushButton, QSizePolicy,
                              QVBoxLayout, QWidget)
@@ -8,6 +9,15 @@ from PyQt5.QtWidgets import (QApplication, QListWidget, QListWidgetItem,
 import helper_doc_reader as hdr
 from component_toolbar import ToolbarComponent
 from window_test import TestWindow
+
+
+class ListItem(QListWidgetItem):
+    def __init__(self, text):
+        super().__init__()
+        self.setText(text)
+        font = QFont()
+        font.setPixelSize(22)
+        self.setFont(font)
 
 
 class ProfilesHelpScreen(QWidget):
@@ -29,7 +39,7 @@ class ProfilesHelpScreen(QWidget):
         self.scroll = QListWidget()
 
         for i in self.docs.keys():
-            self.scroll.addItem(QListWidgetItem(i))
+            self.scroll.addItem(ListItem(i))
 
         self.scroll.itemSelectionChanged.connect(self.pop_up_generator)
 

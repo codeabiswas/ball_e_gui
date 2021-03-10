@@ -1,63 +1,25 @@
+import csv
 import os
+import pathlib
 import sys
 from pathlib import Path
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QFont, QIcon
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QListView,
-                             QListWidget, QListWidgetItem, QMessageBox,
-                             QPushButton, QSizePolicy, QVBoxLayout, QWidget)
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QDialog,
+                             QHBoxLayout, QLabel, QLineEdit, QListWidget,
+                             QListWidgetItem, QPushButton, QSizePolicy,
+                             QTableWidget, QTableWidgetItem, QVBoxLayout,
+                             QWidget)
 
-import helper_doc_reader as hdr
+import style_constants as sc
+from component_button import ProfileCreateButton, ProfileDeleteButton
+from component_labels import ProfileLabel, TableHeaderLabel
+from component_modal import Modal
 from component_toolbar import ToolbarComponent
+from helper_profiler import Profiler
 from window_test import TestWindow
-
-
-class ProfileLabel(QLabel):
-    def __init__(self, profile_label):
-        super().__init__()
-        self.setText(profile_label)
-        self.setStyleSheet(
-            """
-            color: black;
-            font-size: 20px;
-            """
-        )
-
-
-class ProfileCreateButton(QPushButton):
-    def __init__(self):
-        super().__init__()
-        self.setText("Create New")
-        self.setFixedWidth(150)
-        self.setStyleSheet(
-            """
-            background-color: green;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            """
-        )
-
-
-class ProfileDeleteButton(QPushButton):
-    def __init__(self):
-        super().__init__()
-        self.setText("Delete")
-        self.setSizePolicy(
-            QSizePolicy.Fixed,
-            QSizePolicy.Expanding
-        )
-        self.setFixedWidth(100)
-        self.setStyleSheet(
-            """
-            background-color: red;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            """
-        )
 
 
 class ProfileWidget(QWidget):
@@ -75,65 +37,33 @@ class ProfileWidget(QWidget):
         self.setLayout(widget_layout)
 
 
-class TableHeaderLabel(QLabel):
-    def __init__(self, table_header_label):
-        super().__init__()
-        self.setText(table_header_label)
-        self.setStyleSheet(
-            """
-            color: black;
-            font-size: 26px;
-            font-weight: bold;
-            """
-        )
-
-
-class Profiler():
-    def __init__(self, dirname):
-        self.dirname = dirname
-
-    def get_profiles(self):
-
-        location = str(Path.home()) + \
-            '/Documents/ball_e_profiles/' + self.dirname
-        profile_names = list()
-        profile_info = list()
-        for r, profile_dirs, profile_infos in os.walk(location):
-            for profile_dir in profile_dirs:
-                profile_names.append(profile_dir)
-            for each_profile_info in profile_infos:
-                profile_info.append(os.path.join(r, each_profile_info))
-
-        return {profile_names[i]: profile_info[i] for i in range(len(profile_names))}
-
-    def get_profile_info(self, profile_name):
-        pass
-
-
 class GoalieProfilesScreen(QWidget):
 
     def __init__(self, parent=None):
         # TODO: Creating a new profile
-        # TODO: Deleted a profile
+        # TODO: Deleting a profile
 
         super().__init__(parent=parent)
 
         self.window_title = "Goalie Profiles"
 
         # Get the goalie profiles available on the device
-        profiler = Profiler('goalie_profiles')
-        self.goalie_profiles = profiler.get_profiles()
+        self.profiler = Profiler('goalie_profiles')
+        self.goalie_profiles = self.profiler.get_profiles()
 
-        screen_layout = QVBoxLayout()
+        self.screen_layout = QVBoxLayout()
 
         self.toolbar = ToolbarComponent(self.window_title, "Back to Profiles")
 
-        screen_layout.addWidget(self.toolbar)
+        self.screen_layout.addWidget(self.toolbar)
 
         table_header_layout = QHBoxLayout()
         table_header_layout.addWidget(TableHeaderLabel('Goalie Profile Name'))
-        table_header_layout.addWidget(ProfileCreateButton())
-        screen_layout.addLayout(table_header_layout)
+        goalie_profile_create_button = ProfileCreateButton()
+        goalie_profile_create_button.clicked.connect(
+            self.create_new_goalie_profile_modal)
+        table_header_layout.addWidget(goalie_profile_create_button)
+        self.screen_layout.addLayout(table_header_layout)
 
         self.scroll = QListWidget()
 
@@ -145,36 +75,94 @@ class GoalieProfilesScreen(QWidget):
             self.scroll.setItemWidget(item, some_goalie_profile_widget)
             item.setSizeHint(some_goalie_profile_widget.sizeHint())
 
-        self.scroll.itemSelectionChanged.connect(self.pop_up_generator)
+        self.scroll.itemSelectionChanged.connect(
+            self.goalie_info_modal)
 
-        screen_layout.addWidget(self.scroll)
+        self.screen_layout.addWidget(self.scroll)
 
-        self.setLayout(screen_layout)
+        self.setLayout(self.screen_layout)
 
-    def pop_up_generator(self):
-        # TODO: Create a scroll view of the Goalie Profile
+    def create_new_goalie_profile_modal(self):
+
+        modal = QDialog()
+        modal.setWindowFlags(Qt.WindowStaysOnTopHint |
+                             Qt.WindowCloseButtonHint)
+        modal.setWindowTitle(self.window_title)
+
+        modal_layout = QHBoxLayout()
+        modal_layout.addWidget(ProfileLabel("Name: "))
+        goalie_name_input = QLineEdit()
+        modal_layout.addWidget(goalie_name_input)
+        new_goalie_profile_save_button = QPushButton("Save")
+        new_goalie_profile_save_button.clicked.connect(
+            lambda: self.create_new_goalie_profile(goalie_name_input.text()))
+        modal_layout.addWidget(new_goalie_profile_save_button)
+
+        modal.setLayout(modal_layout)
+
+        modal.exec_()
+
+    def create_new_goalie_profile(self, goalie_name):
+        location = str(Path.home()) + \
+            '/Documents/ball_e_profiles/goalie_profiles/' + \
+            goalie_name.replace(' ', '_').lower()
+        pathlib.Path(location).mkdir(parents=True, exist_ok=True)
+        pathlib.Path(location+'/{}.csv'.format(goalie_name.replace(' ',
+                                                                   '_').lower())).touch(exist_ok=True)
+
+    def goalie_info_modal(self):
 
         selected_data = self.scroll.selectedIndexes()[0]
-
-        pop_up = QMessageBox()
-        pop_up.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
-        pop_up.setWindowTitle(self.window_title)
-        pop_up.setStandardButtons(QMessageBox.Close)
 
         goalie_name = list(self.goalie_profiles.keys())[
             selected_data.row()]
         goalie_profile_path = self.goalie_profiles[goalie_name]
-        pop_up.setText('Goalie Name: {}'.format(
-            goalie_name.replace('_', ' ').title()))
-        pop_up.setInformativeText(goalie_profile_path)
 
-        pop_up.setStyleSheet(
+        modal_layout = QVBoxLayout()
+
+        modal_layout.addWidget(ProfileLabel(
+            'Name: {}'.format(goalie_name.replace('_', ' ').title())))
+
+        table_view = QTableWidget()
+        drill_names = list()
+        table_view.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+        goalie_info = self.profiler.get_profile_info(goalie_profile_path)
+
+        counter = 0
+        table_view.setRowCount(len(goalie_info))
+        table_view.setColumnCount(1)
+        for drill_info, date_info in zip(goalie_info.keys(), goalie_info.values()):
+            drill_names.append(drill_info)
+            date_info_widget = QTableWidgetItem(date_info)
+            some_font = QFont()
+            some_font.setPixelSize(int(sc.FONT_M[:2]))
+            date_info_widget.setFont(some_font)
+            date_info_widget.setTextAlignment(Qt.AlignCenter)
+            table_view.setItem(counter, 0, date_info_widget)
+            counter += 1
+        table_view.setHorizontalHeaderLabels(["Date Performed"])
+        table_view.setVerticalHeaderLabels(drill_names)
+        table_view.horizontalHeader().setStretchLastSection(True)
+
+        table_view.horizontalHeader().setStyleSheet(
             """
-            font-size: 22px;
-            """
+            font-size: {font_size}
+            """.format(font_size=sc.FONT_M)
         )
 
-        pop_up.exec_()
+        table_view.verticalHeader().setStyleSheet(
+            """
+            font-size: {font_size}
+            """.format(font_size=sc.FONT_M)
+        )
+
+        modal_layout.addWidget(table_view)
+
+        Modal(
+            type="info",
+            layout=modal_layout,
+            window_title=self.get_window_title()
+        )
 
     def get_window_title(self):
         return self.window_title

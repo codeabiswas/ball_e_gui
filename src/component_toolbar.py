@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QHBoxLayout, QLabel,
                              QLayout, QMainWindow, QPushButton, QSizePolicy,
                              QVBoxLayout, QWidget)
 
+import style_constants as sc
+
 
 class ToolbarButton(QPushButton):
     def __init__(self, button_title):
@@ -15,15 +17,15 @@ class ToolbarButton(QPushButton):
             QSizePolicy.Fixed,
             QSizePolicy.Expanding
         )
-        screen_info = QDesktopWidget().screenGeometry(0)
-        self.setFixedWidth(int(0.25*screen_info.width()))
+        self.setFixedWidth(int(0.25*sc.SCREEN_WIDTH))
 
         self.setStyleSheet(
             """
-            font-size: 24px;
+            font-size: {font_size};
             background-color: white
-            """
+            """.format(font_size=sc.FONT_M)
         )
+
 
 class ToolbarTitle(QLabel):
     def __init__(self, toolbar_title):
@@ -32,11 +34,12 @@ class ToolbarTitle(QLabel):
         self.setStyleSheet(
             """
             color: white;
-            font-size: 60px;
+            font-size: {font_size};
             font-weight: bold
-            """
+            """.format(font_size=sc.FONT_XXL)
         )
         self.setAlignment(Qt.AlignCenter)
+
 
 class ToolbarComponent(QWidget):
     def __init__(self, screen_title, prev_screen_button_title="", parent=None):
@@ -44,15 +47,14 @@ class ToolbarComponent(QWidget):
 
         self.setStyleSheet(
             """
-            background-color: #2E75B6
-            """
+            background-color: {background_color}
+            """.format(background_color=sc.COLOR_TOOLBAR)
         )
 
-        screen_info = QDesktopWidget().screenGeometry(0)
-        self.setFixedHeight(int(0.05*screen_info.width()))
+        self.setFixedHeight(int(0.05*sc.SCREEN_WIDTH))
 
         self.toolbar_layout = QHBoxLayout()
-        self.toolbar_layout.setContentsMargins(0,0,0,0)
+        self.toolbar_layout.setContentsMargins(0, 0, 0, 0)
 
         if prev_screen_button_title != "":
             self.prev_screen_button = ToolbarButton(prev_screen_button_title)
