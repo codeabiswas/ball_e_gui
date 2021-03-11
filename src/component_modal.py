@@ -1,6 +1,8 @@
+import sys
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QDesktopWidget, QDialog, QHBoxLayout, QLabel,
-                             QVBoxLayout, QWidget)
+                             QPushButton, QVBoxLayout, QWidget)
 
 import style_constants as sc
 
@@ -45,6 +47,21 @@ class Modal(QDialog):
             )
             heading_bar_label.setText("Error: {}".format(window_title))
 
+        elif type == "choice":
+            heading_bar.setStyleSheet(
+                """
+                background-color: {background_color};
+                """.format(background_color=sc.COLOR_INFO)
+            )
+            heading_bar_label.setText("Info: {}".format(window_title))
+
+            self.yes_button = QPushButton("Yes")
+            no_button = QPushButton("No")
+            decision_buttons_layout = QHBoxLayout()
+            decision_buttons_layout.addWidget(self.yes_button)
+            decision_buttons_layout.addWidget(no_button)
+            no_button.clicked.connect(lambda: self.close())
+
         else:
             raise Exception("{} is not a valid modal type.".format(type))
 
@@ -52,6 +69,14 @@ class Modal(QDialog):
 
         modal_layout.addWidget(heading_bar)
 
-        modal_layout.addLayout(layout)
+        if type == "choice":
+            modal_layout.addLayout(layout)
+            modal_layout.addLayout(decision_buttons_layout)
+        else:
+            modal_layout.addLayout(layout)
+
         self.setLayout(modal_layout)
-        self.exec_()
+        self.setMinimumWidth(int(0.25*sc.SCREEN_WIDTH))
+
+        if not type == "choice":
+            self.exec_()
