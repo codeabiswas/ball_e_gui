@@ -22,26 +22,9 @@ from helper_profiler import Profiler
 from window_test import TestWindow
 
 
-class ProfileWidget(QWidget):
-
-    def __init__(self, text):
-        super().__init__()
-
-        self.text = text
-
-        widget_layout = QHBoxLayout()
-        widget_layout.addWidget(ProfileLabel(self.text))
-        self.delete_button = ProfileDeleteButton()
-        widget_layout.addWidget(self.delete_button)
-
-        self.setLayout(widget_layout)
-
-
 class GoalieProfilesScreen(QWidget):
 
     def __init__(self, parent=None):
-        # TODO: Creating a new profile
-        # TODO: Deleting a profile
 
         super().__init__(parent=parent)
 
