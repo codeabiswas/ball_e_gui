@@ -1,10 +1,10 @@
-
 import sys
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
+import screen_drill_profiles
 import screen_goalie_profiles
 import screen_help
 import screen_help_calibration
@@ -25,10 +25,11 @@ class MainWindow(QMainWindow):
         # All screens setup
         self.home_screen = screen_home.HomeScreen()
 
+        self.training_screen = screen_training.TrainingScreen()
+
         self.profiles_screen = screen_profiles.ProfilesScreen()
         self.goalie_profiles_screen = screen_goalie_profiles.GoalieProfilesScreen()
-
-        self.training_screen = screen_training.TrainingScreen()
+        self.drill_profiles_screen = screen_drill_profiles.DrillProfilesScreen()
 
         self.help_screen = screen_help.HelpScreen()
         self.calibration_help_screen = screen_help_calibration.CalibrationHelpScreen()
@@ -45,6 +46,7 @@ class MainWindow(QMainWindow):
 
         self.main_widget.addWidget(self.profiles_screen)
         self.main_widget.addWidget(self.goalie_profiles_screen)
+        self.main_widget.addWidget(self.drill_profiles_screen)
 
         self.main_widget.addWidget(self.training_screen)
 
@@ -67,6 +69,8 @@ class MainWindow(QMainWindow):
         self.profiles_screen_flows()
         # Goalie Profiles Screen Flows
         self.goalie_profiles_screen_flows()
+        # Drill Profiles Screen Flows
+        self.drill_profiles_screen_flows()
 
         # Help Screen Flows
         self.help_screen_flows()
@@ -101,12 +105,21 @@ class MainWindow(QMainWindow):
         # Profiles Screen Flows
         self.profiles_screen.goalie_profiles_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.goalie_profiles_screen))
+        self.profiles_screen.drill_profiles_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.drill_profiles_screen))
 
     def goalie_profiles_screen_flows(self):
         # Toolbar Flows
         self.goalie_profiles_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
         self.goalie_profiles_screen.toolbar.prev_screen_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.profiles_screen))
+
+    def drill_profiles_screen_flows(self):
+        # Toolbar Flows
+        self.drill_profiles_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        self.drill_profiles_screen.toolbar.prev_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.profiles_screen))
 
     def help_screen_flows(self):

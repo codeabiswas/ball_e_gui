@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QLabel, QMainWindow,
                              QPushButton, QScrollArea, QSizePolicy,
                              QVBoxLayout, QWidget)
 
-from component_button import Button
+from component_button import GenericButton
 from component_toolbar import ToolbarComponent
 from window_test import TestWindow
 
@@ -24,10 +24,10 @@ class HelpScreen(QWidget):
 
         screen_layout.addWidget(self.toolbar)
 
-        self.calibration_screen_button = Button("Calibration")
-        self.training_screen_button = Button("Training")
-        self.profiles_screen_button = Button("Profiles")
-        self.session_recording_screen_button = Button(
+        self.calibration_screen_button = GenericButton("Calibration")
+        self.training_screen_button = GenericButton("Training")
+        self.profiles_screen_button = GenericButton("Profiles")
+        self.session_recording_screen_button = GenericButton(
             "Session Recording")
 
         screen_layout.addWidget(self.calibration_screen_button)

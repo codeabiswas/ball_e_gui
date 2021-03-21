@@ -23,71 +23,72 @@ from window_test import TestWindow
 
 
 class GoalieProfilesScreen(QWidget):
+    """Screen to create, delete, and view Goalie Profiles
 
-    def __init__(self, parent=None):
+    Args:
+        QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
+    """
 
-        super().__init__(parent=parent)
+    def __init__(self):
+        """Widget Initialization
+        """
+        super().__init__()
 
         self.window_title = "Goalie Profiles"
 
         # Get the goalie profiles available on the device
         self.profiler = Profiler('goalie_profiles')
-        self.goalie_profiles = self.profiler.get_profiles()
-        self.curr_goalie_profiles_len = len(self.goalie_profiles)
+        self.get_goalie_profiles_info()
 
+        # This font will be used for all table related purposes
+        self.table_font = QFont()
+        self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+
+        # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
 
+        # Create a toolback object and add it to the top of the layout
         self.toolbar = ToolbarComponent(self.window_title, "Back to Profiles")
-
         self.screen_layout.addWidget(self.toolbar)
 
-        self.table_header = QTableWidget()
-        self.table_header.setEditTriggers(
-            QtWidgets.QTableWidget.NoEditTriggers)
-        self.table_header.setRowCount(1)
-        self.table_header.setColumnCount(2)
-
-        table_title_widget = QTableWidgetItem("Goalie Profile Names")
-
-        some_font = QFont()
-        some_font.setPixelSize(int(sc.FONT_M[:2]))
-        table_title_widget.setFont(some_font)
-        self.table_header.setItem(
-            0, 0, table_title_widget
-        )
-
-        create_new_goalie_profile_widget = QTableWidgetItem(
-            "Create New")
-        create_new_goalie_profile_widget.setFont(some_font)
-        self.table_header.setItem(
-            0, 1, create_new_goalie_profile_widget
-        )
-
-        self.table_header.clicked.connect(
-            self.create_new_goalie_profile_modal)
-
-        self.table_header.verticalHeader().setVisible(False)
-        self.table_header.horizontalHeader().setVisible(False)
-
-        self.table_header.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.table_header.horizontalHeader().setSectionResizeMode(
-            1, QHeaderView.ResizeToContents)
-        self.table_header.setSizePolicy(
-            QSizePolicy.Preferred,
-            QSizePolicy.Fixed
-        )
-        self.table_header.setFixedHeight(sc.TABLE_HEADER_HEIGHT)
-
+        # Create a table header and add to the layout
+        self.create_table_header_view(
+            table_title_name="Goalie Profiles",
+            header_clicked_action=self.create_new_goalie_profile_modal)
         self.screen_layout.addWidget(self.table_header)
 
-        self.scroll = QTableWidget()
-        self.scroll.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
-        self.scroll.setRowCount(len(self.goalie_profiles))
-        self.scroll.setColumnCount(2)
+        # Create the main table and add to the layout
+        self.create_main_table_view(profile_dict_obj=self.goalie_profiles,
+                                    table_clicked_action=self.choose_main_table_click_action)
+        self.screen_layout.addWidget(self.main_table_view)
 
-        for row_count, goalie_name in enumerate(self.goalie_profiles.keys()):
-            mod_goalie_name = goalie_name.replace('_', ' ').title()
-            mod_goalie_name_widget = QTableWidgetItem(mod_goalie_name)
+        # Set the screen layout
+        self.setLayout(self.screen_layout)
+
+    def create_main_table_view(self, profile_dict_obj, table_clicked_action):
+        """Creates the main table widget from a profile dictionary
+
+        Args:
+            profile_dict_obj (dict): Dictionary that contains the profile info (the profile name and its path)
+            table_clicked_action (function): Function to execute when table is clicked
+        """
+
+        # Create the main table widget where data will be populated
+        self.main_table_view = QTableWidget()
+        # Do not allow the user to edit the contents of the table
+        self.main_table_view.setEditTriggers(
+            QtWidgets.QTableWidget.NoEditTriggers)
+        # The number of rows is defined by how many objects there are in the dictionary
+        self.main_table_view.setRowCount(len(profile_dict_obj))
+        # 2 columns: one for the profile name and one for the delete button
+        self.main_table_view.setColumnCount(2)
+
+        # Iterate through the data in the dictionary and format it appropriately in the table
+        for row_count, profile_name in enumerate(profile_dict_obj):
+            # Modify the profile name's string and populate into a table cell
+            mod_profile_name = profile_name.replace('_', ' ').title()
+            mod_profile_name_widget = QTableWidgetItem(mod_profile_name)
+            # Create a delete 'button' by converting a cell to act like a button
             delete_row_widget = QTableWidgetItem('Delete')
             delete_row_widget.setBackground(
                 QColor(sc.COLOR_ERROR)
@@ -95,35 +96,101 @@ class GoalieProfilesScreen(QWidget):
             delete_row_widget.setForeground(
                 QColor(sc.COLOR_WHITE)
             )
-            some_font = QFont()
-            some_font.setPixelSize(int(sc.FONT_M[:2]))
-            mod_goalie_name_widget.setFont(some_font)
-            delete_row_widget.setFont(some_font)
-            mod_goalie_name_widget.setTextAlignment(Qt.AlignLeft)
+            mod_profile_name_widget.setFont(self.table_font)
+            delete_row_widget.setFont(self.table_font)
+            # Align items in their respective cells appropriately
+            mod_profile_name_widget.setTextAlignment(Qt.AlignLeft)
             delete_row_widget.setTextAlignment(Qt.AlignRight)
-            self.scroll.setItem(
-                row_count, 0, mod_goalie_name_widget)
-            self.scroll.setItem(
+            # Add items to the table view
+            self.main_table_view.setItem(
+                row_count, 0, mod_profile_name_widget)
+            self.main_table_view.setItem(
                 row_count, 1, delete_row_widget)
-        self.scroll.clicked.connect(self.choose_table_click_action)
 
-        self.scroll.verticalHeader().setVisible(False)
-        self.scroll.horizontalHeader().setVisible(False)
+        # Function to execute when a cell from this table is clicked
+        self.main_table_view.clicked.connect(table_clicked_action)
 
-        self.scroll.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.scroll.horizontalHeader().setSectionResizeMode(
+        # Capture the horizontal header of the table
+        main_table_hor_head = self.main_table_view.horizontalHeader()
+
+        # Hide all headers of the table
+        self.main_table_view.verticalHeader().setVisible(False)
+        main_table_hor_head.setVisible(False)
+
+        # Resize the left column to stretch as far out as possible
+        main_table_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
+        # Resize the right column to wrap around its contents
+        main_table_hor_head.setSectionResizeMode(
             1, QHeaderView.ResizeToContents)
 
-        self.screen_layout.addWidget(self.scroll)
+    def create_table_header_view(self, table_title_name, header_clicked_action):
+        """Creates a table header for the table below it
 
-        self.setLayout(self.screen_layout)
+        Args:
+            table_title_name (str): Table's title
+            header_clicked (function): Function to execute when the header is clicked
+        """
 
-    def choose_table_click_action(self, item):
-        selected_item = self.scroll.selectedItems()[0]
-        selected_item.setSelected(False)
+        # Create the table object that acts as the "header" for the main goalie profile table view
+        self.table_header = QTableWidget()
+        # Do not allow the user to edit the content of the table
+        self.table_header.setEditTriggers(
+            QtWidgets.QTableWidget.NoEditTriggers)
+        # Set the number of rows and columns of this table. Since it is a header, only 1 row.
+        self.table_header.setRowCount(1)
+        self.table_header.setColumnCount(2)
 
+        # Create a table title cell and set it in the right section
+        table_title_widget = QTableWidgetItem(table_title_name)
+        table_title_widget.setFont(self.table_font)
+        self.table_header.setItem(
+            0, 0, table_title_widget
+        )
+
+        # Create a Create New 'button' by converting a cell to act like a button
+        create_new_goalie_profile_widget = QTableWidgetItem(
+            "Create New")
+        create_new_goalie_profile_widget.setFont(self.table_font)
+        self.table_header.setItem(
+            0, 1, create_new_goalie_profile_widget
+        )
+
+        # Function to execute when a cell from this header is clicked
+        self.table_header.clicked.connect(header_clicked_action)
+
+        # Capture the horizontal header of this table
+        header_hor_head = self.table_header.horizontalHeader()
+
+        # Hide all headers of the table
+        self.table_header.verticalHeader().setVisible(False)
+        header_hor_head.setVisible(False)
+
+        # Size the header appropriately
+        header_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
+        header_hor_head.setSectionResizeMode(
+            1, QHeaderView.ResizeToContents)
+        self.table_header.setSizePolicy(
+            QSizePolicy.Preferred,
+            QSizePolicy.Fixed
+        )
+        self.table_header.setFixedHeight(sc.TABLE_HEADER_HEIGHT)
+
+    def get_goalie_profiles_info(self):
+        """Updates the backend with goalie profile info
+        """
+        # Update goalie profiles
+        self.goalie_profiles = self.profiler.get_profiles()
+        # Update the length of the
+        self.curr_goalie_profiles_len = len(self.goalie_profiles)
+
+    def choose_main_table_click_action(self, item):
+        # Unselect the currently picked cell
+        self.main_table_view.selectedItems()[0].setSelected(False)
+
+        # If a profile name has been clicked, then show a modal
         if item.column() == 0:
             self.goalie_info_modal(item.row())
+        # If the delete button has been clicked, go through the process of ensuring the user is fine with deleting it
         elif item.column() == 1:
 
             check_delete_modal_layout = QVBoxLayout()
@@ -132,62 +199,91 @@ class GoalieProfilesScreen(QWidget):
             check_delete_modal = Modal(
                 type="choice",
                 layout=check_delete_modal_layout,
-                window_title=self.scroll.item(item.row(), 0).text()
-
+                window_title=self.main_table_view.item(item.row(), 0).text()
             )
 
+            # If yes is clicked, delete the profile
             check_delete_modal.yes_button.clicked.connect(
                 lambda: self.remove_goalie_profile(item.row(), check_delete_modal))
 
             check_delete_modal.exec_()
 
     def remove_goalie_profile(self, table_row, modal_object):
+        """Removes a goalie profile from the device
 
+        Args:
+            table_row (int): The table row number
+            modal_object (QDialog): Instance of the modal view
+        """
+
+        # Fetch the location of the goalie profile
         location = str(Path.home()) + '/Documents/ball_e_profiles/goalie_profiles/' + \
-            self.scroll.item(table_row, 0).text().replace(' ', '_').lower()
+            self.main_table_view.item(
+                table_row, 0).text().replace(' ', '_').lower()
+        # Remove the directory and remove the row from the table
         shutil.rmtree(location, ignore_errors=True)
-        self.scroll.removeRow(table_row)
+        self.main_table_view.removeRow(table_row)
 
-        self.goalie_profiles = self.profiler.get_profiles()
-        self.curr_goalie_profiles_len = len(self.goalie_profiles)
+        # Update the goalie profile instance
+        self.get_goalie_profiles_info()
 
+        # Close the modal
         modal_object.close()
 
     def create_new_goalie_profile_modal(self, item):
+        """The modal for creating a new goalie profile
 
-        selected_item = self.table_header.selectedItems()[0]
-        selected_item.setSelected(False)
+        Args:
+            item (Object): The cell object selected in TableView
+        """
+        # Unselect the currently picked cell
+        self.table_header.selectedItems()[0].setSelected(False)
 
+        # Ensure that the user actually selected the Create New button
         if item.column() == 1:
 
-            modal = QDialog()
-            modal.setWindowFlags(Qt.WindowStaysOnTopHint |
-                                 Qt.WindowCloseButtonHint)
-            modal.setWindowTitle(self.window_title)
+            # Create a modal that will take user input for the goalie name
 
-            modal_layout = QHBoxLayout()
-            modal_layout.addWidget(ProfileLabel("Name: "))
+            create_goalie_profile_modal_layout = QHBoxLayout()
+            create_goalie_profile_modal_layout.addWidget(
+                ProfileLabel("Name: "))
             goalie_name_input = QLineEdit()
-            modal_layout.addWidget(goalie_name_input)
+            create_goalie_profile_modal_layout.addWidget(goalie_name_input)
             new_goalie_profile_save_button = QPushButton("Save")
             new_goalie_profile_save_button.clicked.connect(
                 lambda: self.create_new_goalie_profile(goalie_name_input.text()))
-            modal_layout.addWidget(new_goalie_profile_save_button)
+            create_goalie_profile_modal_layout.addWidget(
+                new_goalie_profile_save_button)
 
-            modal.setLayout(modal_layout)
-
-            modal.exec_()
+            modal_title = "Create New Goalie Profile"
+            Modal(
+                type="info",
+                layout=create_goalie_profile_modal_layout,
+                window_title=modal_title
+            )
 
     def create_new_goalie_profile(self, goalie_name):
+        """Creates a goalie profile locally in the device
+
+        Args:
+            goalie_name (string): Goalie Profile name
+        """
+
+        # Location where the profile will be stored
         location = str(Path.home()) + '/Documents/ball_e_profiles/goalie_profiles/' + \
             goalie_name.replace(' ', '_').lower()
+
+        # Ensure that the goalie profile does not exist (regardless of case-sensitivity). If it does, then throw an error informing the user about it
         try:
+            # Create a directory and a .csv file containing the new goalie profile
             pathlib.Path(location).mkdir(parents=True, exist_ok=False)
             pathlib.Path(location+'/{}.csv'.format(goalie_name.replace(' ',
                                                                        '_').lower())).touch(exist_ok=False)
-            last_row_num = self.scroll.rowCount()
-            self.scroll.insertRow(last_row_num)
+            # Append this new profile to the end of the table
+            last_row_num = self.main_table_view.rowCount()
+            self.main_table_view.insertRow(last_row_num)
 
+            # Format the row accordingly with the goalie profile name and a delete 'button'
             mod_goalie_name_widget = QTableWidgetItem(goalie_name)
             delete_row_widget = QTableWidgetItem('Delete')
             delete_row_widget.setBackground(
@@ -196,20 +292,21 @@ class GoalieProfilesScreen(QWidget):
             delete_row_widget.setForeground(
                 QColor(sc.COLOR_WHITE)
             )
-            some_font = QFont()
-            some_font.setPixelSize(int(sc.FONT_M[:2]))
-            mod_goalie_name_widget.setFont(some_font)
-            delete_row_widget.setFont(some_font)
+            mod_goalie_name_widget.setFont(self.table_font)
+            delete_row_widget.setFont(self.table_font)
             mod_goalie_name_widget.setTextAlignment(Qt.AlignLeft)
             delete_row_widget.setTextAlignment(Qt.AlignRight)
-            self.scroll.setItem(
+
+            # Set the contents in the table appropriately
+            self.main_table_view.setItem(
                 last_row_num, 0, mod_goalie_name_widget)
-            self.scroll.setItem(
+            self.main_table_view.setItem(
                 last_row_num, 1, delete_row_widget)
 
-            self.goalie_profiles = self.profiler.get_profiles()
-            self.curr_goalie_profiles_len = len(self.goalie_profiles)
+            # Update the goalie profiles instance
+            self.get_goalie_profiles_info()
 
+        # Let the user know that the profile exists using a modal
         except FileExistsError:
             error_modal_layout = QVBoxLayout()
             error_modal_layout.addWidget(QLabel("Goalie Exists"))
@@ -220,18 +317,25 @@ class GoalieProfilesScreen(QWidget):
             )
 
     def goalie_info_modal(self, table_row):
+        """Modal to show Goalie info
 
+        Args:
+            table_row (Object): The selected row in the table
+        """
+
+        # If the selected row was newly created, then just display the modal saying "No information yet and quit"
         if table_row >= self.curr_goalie_profiles_len:
             info_modal_layout = QVBoxLayout()
             info_modal_layout.addWidget(QLabel("No information yet."))
             Modal(
                 type="info",
                 layout=info_modal_layout,
-                window_title=self.scroll.item(table_row, 0).text()
+                window_title=self.main_table_view.item(table_row, 0).text()
             )
             return
 
-        goalie_name = self.scroll.item(
+        # Get the goalie's info
+        goalie_name = self.main_table_view.item(
             table_row, 0).text().replace(' ', '_').lower()
         goalie_profile_path = self.goalie_profiles[goalie_name]
 
@@ -241,6 +345,7 @@ class GoalieProfilesScreen(QWidget):
         table_view.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         goalie_info = self.profiler.get_profile_info(goalie_profile_path)
 
+        # If no info has been populated, also show that "No information yet" and quit
         if(len(goalie_info) == 0):
             info_modal_layout = QVBoxLayout()
             info_modal_layout.addWidget(QLabel("No information yet."))
@@ -251,16 +356,17 @@ class GoalieProfilesScreen(QWidget):
             )
             return
 
+        # Otherwise, create and populate the table with drill information and times performed
         table_view.setRowCount(len(goalie_info))
         table_view.setColumnCount(2)
 
+        # Iterates through all the information and populates the table
         for curr_row, (drill_info, date_info) in enumerate(zip(goalie_info.keys(), goalie_info.values())):
             drill_name_widget = QTableWidgetItem(drill_info)
             date_info_widget = QTableWidgetItem(date_info)
-            some_font = QFont()
-            some_font.setPixelSize(int(sc.FONT_M[:2]))
-            drill_name_widget.setFont(some_font)
-            date_info_widget.setFont(some_font)
+            self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+            drill_name_widget.setFont(self.table_font)
+            date_info_widget.setFont(self.table_font)
             drill_name_widget.setTextAlignment(Qt.AlignCenter)
             date_info_widget.setTextAlignment(Qt.AlignCenter)
             table_view.setItem(curr_row, 0, drill_name_widget)
@@ -286,6 +392,7 @@ class GoalieProfilesScreen(QWidget):
 
         modal_layout.addWidget(table_view)
 
+        # Create a modal object to show all this information
         Modal(
             type="info",
             layout=modal_layout,
@@ -293,6 +400,11 @@ class GoalieProfilesScreen(QWidget):
         )
 
     def get_window_title(self):
+        """Helper function to return this window's title
+
+        Returns:
+            [string]: This window's title
+        """
         return self.window_title
 
 

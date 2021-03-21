@@ -37,7 +37,7 @@ class Modal(QDialog):
                 background-color: {background_color};
                 """.format(background_color=sc.COLOR_INFO)
             )
-            heading_bar_label.setText("Info: {}".format(window_title))
+            heading_bar_label.setText(window_title)
         elif type == "error":
 
             heading_bar.setStyleSheet(
@@ -45,7 +45,7 @@ class Modal(QDialog):
                 background-color: {background_color};
                 """.format(background_color=sc.COLOR_ERROR)
             )
-            heading_bar_label.setText("Error: {}".format(window_title))
+            heading_bar_label.setText(window_title)
 
         elif type == "choice":
             heading_bar.setStyleSheet(
@@ -53,7 +53,7 @@ class Modal(QDialog):
                 background-color: {background_color};
                 """.format(background_color=sc.COLOR_INFO)
             )
-            heading_bar_label.setText("Info: {}".format(window_title))
+            heading_bar_label.setText(window_title)
 
             self.yes_button = QPushButton("Yes")
             no_button = QPushButton("No")

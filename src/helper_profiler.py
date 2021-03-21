@@ -26,11 +26,30 @@ class Profiler():
             csv_reader = csv.reader(file, delimiter=',')
             row_count = 0
             info_dict = dict()
-            for row in csv_reader:
-                if row_count == 0:
-                    row_count += 1
-                else:
-                    info_dict[row[0]] = row[1]
-                    row_count += 1
+            if "goalie_profiles" in profile_path:
+                for row in csv_reader:
+                    if row_count == 0:
+                        row_count += 1
+                    else:
+                        info_dict[row[0]] = row[1]
+                        row_count += 1
+            elif "drill_profiles" in profile_path:
+                for row in csv_reader:
+                    if row_count == 0:
+                        row_count += 1
+                    else:
+                        info_dict[row[0]] = [row[1], row[2], row[3]]
+                        row_count += 1
 
         return info_dict
+
+
+def main():
+    some_profiler = Profiler("drill_profiles")
+    print(some_profiler.get_profiles())
+    print(some_profiler.get_profile_info(
+        "/home/codeabiswas/Documents/ball_e_profiles/drill_profiles/drill_a/drill_a.csv"))
+
+
+if __name__ == "__main__":
+    main()
