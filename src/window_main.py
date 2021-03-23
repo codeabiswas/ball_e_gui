@@ -44,11 +44,11 @@ class MainWindow(QMainWindow):
         # Adding all screens to the stacked widget
         self.main_widget.addWidget(self.home_screen)
 
+        self.main_widget.addWidget(self.training_screen)
+
         self.main_widget.addWidget(self.profiles_screen)
         self.main_widget.addWidget(self.goalie_profiles_screen)
         self.main_widget.addWidget(self.drill_profiles_screen)
-
-        self.main_widget.addWidget(self.training_screen)
 
         self.main_widget.addWidget(self.help_screen)
         self.main_widget.addWidget(self.calibration_help_screen)
@@ -93,9 +93,20 @@ class MainWindow(QMainWindow):
             lambda: self.main_widget.setCurrentWidget(self.help_screen))
 
     def training_screen_flows(self):
-        # Training Screen Flows
-        self.training_screen.home_button.clicked.connect(
+        # Toolbar Flows
+        self.training_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
+
+        # Training Screen Flows
+        self.training_screen.load_goalie_profile_button.clicked.connect(
+            # lambda:
+        )
+        self.training_screen.load_drill_profile_button.clicked.connect(
+            # lambda:
+        )
+        self.training_screen.manual_session_button.clicked.connect(
+            # lambda:
+        )
 
     def profiles_screen_flows(self):
         # Toolbar Flows
