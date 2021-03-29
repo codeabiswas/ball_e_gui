@@ -71,6 +71,13 @@ class NumberOfBallsSelectionScreen(QWidget):
         number_of_balls_input.currentIndexChanged.connect(
             lambda: self.update_number_of_balls(int(number_of_balls_input.currentText())))
 
+        self.screen_layout.addWidget(number_of_balls_input)
+
+        if prev_screen == "training_drill_profile_choice_screen":
+            self.check_button = QPushButton("Check")
+            self.check_button.clicked.connect(self.check_ball_requirement)
+            self.screen_layout.addWidget(self.check_button)
+
         # Connect this button on the Main Page Window to act accordingly - whether Drill Profile or Manual Session was selected
         self.next_page_button = QPushButton("Next")
 
@@ -95,10 +102,10 @@ class NumberOfBallsSelectionScreen(QWidget):
         if self.curr_ball_num <= self.get_drill_required_balls():
             self.enough_balls_label.setText(
                 "Selected drill requires {} balls. Please fill at least that many then try again.".format(self.get_drill_required_balls()))
-            self.enough_balls_label.setVisible(False)
+            self.next_page_button.setVisible(False)
         else:
             self.enough_balls_label.setText("You are good to go!")
-            self.enough_balls_label.setVisible(True)
+            self.next_page_button.setVisible(True)
 
     def get_window_title(self):
         """Helper function to return this window's title
