@@ -94,9 +94,11 @@ class NumberOfBallsSelectionScreen(QWidget):
 
         if self.curr_ball_num <= self.get_drill_required_balls():
             self.enough_balls_label.setText(
-                "This drill requires {} balls. Please fill at least that many then try again.".format(self.get_drill_required_balls()))
+                "Selected drill requires {} balls. Please fill at least that many then try again.".format(self.get_drill_required_balls()))
+            self.enough_balls_label.setVisible(False)
         else:
             self.enough_balls_label.setText("You are good to go!")
+            self.enough_balls_label.setVisible(True)
 
     def get_window_title(self):
         """Helper function to return this window's title
@@ -110,7 +112,7 @@ class NumberOfBallsSelectionScreen(QWidget):
 def main():
     app = QApplication(sys.argv)
     win = TestWindow(NumberOfBallsSelectionScreen(
-        prev_screen="training_screen"))
+        prev_screen="training_screen", drill_name="Drill A"))
     win.show()
     sys.exit(app.exec_())
 
