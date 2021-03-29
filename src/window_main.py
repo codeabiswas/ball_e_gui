@@ -16,6 +16,7 @@ import screen_profiles
 import screen_training
 import screen_training_drill_profile_selection
 import screen_training_goalie_profile_selection
+import screen_training_number_of_balls_selection
 
 
 class MainWindow(QMainWindow):
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
         self.training_screen = screen_training.TrainingScreen()
         self.training_goalie_profile_selection_screen = screen_training_goalie_profile_selection.TrainingGoalieProfileSelectionScreen()
         self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen()
+        # For the Number of Balls selection screen, the previous screen needs to be known, therefore it will be called from the respective flow
 
         self.profiles_screen = screen_profiles.ProfilesScreen()
         self.goalie_profiles_screen = screen_goalie_profiles.GoalieProfilesScreen()
@@ -115,9 +117,37 @@ class MainWindow(QMainWindow):
         self.training_screen.load_drill_profile_button.clicked.connect(
             self.only_training_drill_profile_profile_selection_screen_setup
         )
-        # self.training_screen.manual_session_button.clicked.connect(
-        #     # lambda:
-        # )
+        self.training_screen.manual_session_button.clicked.connect(
+            self.manual_session_training_number_of_balls_selection_screen_setup
+        )
+
+    def manual_session_training_number_of_balls_selection_screen_setup(self):
+        prev_screen = "training_screen"
+
+        self.training_number_of_balls_selection_screen = screen_training_number_of_balls_selection.TrainingNumberOfBallsSelectionScreen(
+            prev_screen=prev_screen)
+
+        self.training_number_of_balls_selection_screen_flows(
+            prev_screen=prev_screen)
+
+        self.main_widget.addWidget(
+            self.training_number_of_balls_selection_screen)
+        self.main_widget.setCurrentWidget(
+            self.training_number_of_balls_selection_screen)
+
+    def training_number_of_balls_selection_screen_flows(self, prev_screen):
+        # Toolbar Flows
+        if prev_screen == "training_screen":
+            self.training_number_of_balls_selection_screen.toolbar.prev_screen_button.clicked.connect(
+                lambda: self.main_widget.setCurrentWidget(self.training_screen))
+        elif prev_screen == "training_drill_profile_choice_screen":
+            self.training_number_of_balls_selection_screen.toolbar.prev_screen_button.clicked.connect(
+                lambda: self.main_widget.setCurrentWidget(self.training_drill_profile_selection_screen))
+        else:
+            return
+
+        self.training_number_of_balls_selection_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
 
     def only_training_drill_profile_profile_selection_screen_setup(self):
 
@@ -172,6 +202,23 @@ class MainWindow(QMainWindow):
         else:
             self.training_drill_profile_selection_screen.toolbar.prev_screen_button.clicked.connect(
                 lambda: self.main_widget.setCurrentWidget(self.training_goalie_profile_selection_screen))
+
+        self.training_drill_profile_selection_screen.next_page_button.clicked.connect(
+            lambda: self.automated_session_training_number_of_balls_selection_screen_setup(self.training_drill_profile_selection_screen.get_selected_drill_profile()))
+
+    def automated_session_training_number_of_balls_selection_screen_setup(self,  drill_name):
+        prev_screen = "training_drill_profile_choice_screen"
+
+        self.training_number_of_balls_selection_screen = screen_training_number_of_balls_selection.TrainingNumberOfBallsSelectionScreen(
+            prev_screen=prev_screen, drill_name=drill_name)
+
+        self.training_number_of_balls_selection_screen_flows(
+            prev_screen=prev_screen)
+
+        self.main_widget.addWidget(
+            self.training_number_of_balls_selection_screen)
+        self.main_widget.setCurrentWidget(
+            self.training_number_of_balls_selection_screen)
 
     def profiles_screen_flows(self):
         # Toolbar Flows
