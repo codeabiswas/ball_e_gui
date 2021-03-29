@@ -40,14 +40,13 @@ class TrainingDrillProfileSelectionScreen(QWidget):
             self.toolbar = ToolbarComponent(
                 self.window_title, "Back to Goalie Profile Selection")
 
-        # TODO: Continue from here
         screen_layout.addWidget(self.toolbar)
 
         screen_layout_row_one = QHBoxLayout()
 
-        self.goalie_profile_selection_label = ProfileLabel(
-            "Please Select a Goalie Profile to Continue")
-        screen_layout_row_one.addWidget(self.goalie_profile_selection_label)
+        self.drill_profile_selection_label = ProfileLabel(
+            "Please Select a Drill Profile to Continue")
+        screen_layout_row_one.addWidget(self.drill_profile_selection_label)
 
         self.next_page_button = QPushButton("Next")
         self.next_page_button.setVisible(False)
@@ -55,7 +54,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         screen_layout.addLayout(screen_layout_row_one)
 
         self.create_table_header_view(
-            table_title_name="Goalie Profiles", header_clicked_action=self.unselect_table_header)
+            table_title_name="Drill Profiles", header_clicked_action=self.unselect_table_header)
         screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
@@ -72,7 +71,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
             table_title_name (str): Table's title
         """
 
-        # Create the table object that acts as the "header" for the main goalie profile table view
+        # Create the table object that acts as the "header" for the main Drill profile table view
         self.table_header = QTableWidget()
         # Do not allow the user to edit the content of the table
         self.table_header.setEditTriggers(
@@ -153,14 +152,28 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         main_table_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
 
     def choose_main_table_click_action(self, item):
-        goalie_name = self.main_table_view.item(item.row(), 0).text()
+        drill_name = self.main_table_view.item(item.row(), 0).text()
 
-        self.goalie_profile_selection_label.setText("You have selected: {}".format(
-            goalie_name
+        self.drill_profile_selection_label.setText("You have selected: {}".format(
+            drill_name
         ))
         self.next_page_button.setVisible(True)
 
-        self.selected_drill_profile = goalie_name.replace(' ', '_').lower()
+        self.selected_drill_profile = drill_name.replace(' ', '_').lower()
+
+    def reset_screen(self):
+        # Unselect the currently picked cell
+        self.main_table_view.selectedItems()[0].setSelected(False)
+
+        self.drill_profile_selection_label.setText(
+            "Please Select a Drill Profile to Continue")
+
+        self.selected_drill_profile = None
+
+        self.next_page_button.setVisible(False)
+
+    def get_selected_drill_profile(self):
+        return self.selected_drill_profile
 
     def get_window_title(self):
         return self.window_title
@@ -168,7 +181,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    win = TestWindow(TrainingGoalieProfileSelectionScreen())
+    win = TestWindow(TrainingDrillProfileSelectionScreen())
     win.show()
     sys.exit(app.exec_())
 

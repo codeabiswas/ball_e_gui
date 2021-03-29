@@ -14,6 +14,8 @@ import screen_help_training
 import screen_home
 import screen_profiles
 import screen_training
+import screen_training_drill_profile_selection
+import screen_training_goalie_profile_selection
 
 
 class MainWindow(QMainWindow):
@@ -26,6 +28,8 @@ class MainWindow(QMainWindow):
         self.home_screen = screen_home.HomeScreen()
 
         self.training_screen = screen_training.TrainingScreen()
+        self.training_goalie_profile_selection_screen = screen_training_goalie_profile_selection.TrainingGoalieProfileSelectionScreen()
+        self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen()
 
         self.profiles_screen = screen_profiles.ProfilesScreen()
         self.goalie_profiles_screen = screen_goalie_profiles.GoalieProfilesScreen()
@@ -45,6 +49,10 @@ class MainWindow(QMainWindow):
         self.main_widget.addWidget(self.home_screen)
 
         self.main_widget.addWidget(self.training_screen)
+        self.main_widget.addWidget(
+            self.training_goalie_profile_selection_screen)
+        self.main_widget.addWidget(
+            self.training_drill_profile_selection_screen)
 
         self.main_widget.addWidget(self.profiles_screen)
         self.main_widget.addWidget(self.goalie_profiles_screen)
@@ -64,6 +72,8 @@ class MainWindow(QMainWindow):
 
         # Training Screen Flows
         self.training_screen_flows()
+        self.training_goalie_profile_selection_screen_flows()
+        self.training_drill_profile_selection_screen_flows()
 
         # Profiles Screen Flows
         self.profiles_screen_flows()
@@ -99,14 +109,69 @@ class MainWindow(QMainWindow):
 
         # Training Screen Flows
         self.training_screen.load_goalie_profile_button.clicked.connect(
-            # lambda:
+            lambda: self.main_widget.setCurrentWidget(
+                self.training_goalie_profile_selection_screen)
         )
         self.training_screen.load_drill_profile_button.clicked.connect(
-            # lambda:
+            self.only_training_drill_profile_profile_selection_screen_setup
         )
-        self.training_screen.manual_session_button.clicked.connect(
-            # lambda:
+        # self.training_screen.manual_session_button.clicked.connect(
+        #     # lambda:
+        # )
+
+    def only_training_drill_profile_profile_selection_screen_setup(self):
+
+        self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen()
+
+        self.main_widget.addWidget(
+            self.training_drill_profile_selection_screen)
+
+        self.training_drill_profile_selection_screen_flows(
+            goalie_selected=None)
+
+        self.main_widget.setCurrentWidget(
+            self.training_drill_profile_selection_screen)
+
+    def training_goalie_profile_selection_screen_flows(self):
+        # Toolbar Flows
+        self.training_goalie_profile_selection_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        self.training_goalie_profile_selection_screen.toolbar.prev_screen_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.training_screen))
+
+        # Training Goalie Profile Selection Screen Flows
+        # Repopulate the Drill Selection page according to the Goalie Profile Selection flow
+        self.training_goalie_profile_selection_screen.next_page_button.clicked.connect(
+            self.training_goalie_then_drill_profile_selection_screen_setup
         )
+
+    def training_goalie_then_drill_profile_selection_screen_setup(self):
+        goalie_selected = self.training_goalie_profile_selection_screen.get_selected_goalie_profile()
+
+        self.training_goalie_profile_selection_screen.reset_screen()
+
+        self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen(
+            goalie_selected)
+
+        self.main_widget.addWidget(
+            self.training_drill_profile_selection_screen)
+
+        self.training_drill_profile_selection_screen_flows(
+            goalie_selected=goalie_selected)
+
+        self.main_widget.setCurrentWidget(
+            self.training_drill_profile_selection_screen)
+
+    def training_drill_profile_selection_screen_flows(self, goalie_selected=None):
+        # Toolbar Flows
+        self.training_drill_profile_selection_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        if goalie_selected is None:
+            self.training_drill_profile_selection_screen.toolbar.prev_screen_button.clicked.connect(
+                lambda: self.main_widget.setCurrentWidget(self.training_screen))
+        else:
+            self.training_drill_profile_selection_screen.toolbar.prev_screen_button.clicked.connect(
+                lambda: self.main_widget.setCurrentWidget(self.training_goalie_profile_selection_screen))
 
     def profiles_screen_flows(self):
         # Toolbar Flows

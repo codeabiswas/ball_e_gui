@@ -76,6 +76,10 @@ class NumberOfBallsSelectionScreen(QWidget):
 
         self.screen_layout.addWidget(self.next_page_button)
 
+        self.enough_balls_label = ProfileLabel("")
+        self.enough_balls_label.setVisible(False)
+        self.screen_layout.addWidget(self.enough_balls_label)
+
         # Set the screen layout
         self.setLayout(self.screen_layout)
 
@@ -85,6 +89,14 @@ class NumberOfBallsSelectionScreen(QWidget):
 
     def update_number_of_balls(self, updated_ball_number):
         self.curr_ball_num = updated_ball_number
+
+    def check_ball_requirement(self):
+
+        if self.curr_ball_num <= self.get_drill_required_balls():
+            self.enough_balls_label.setText(
+                "This drill requires {} balls. Please fill at least that many then try again.".format(self.get_drill_required_balls()))
+        else:
+            self.enough_balls_label.setText("You are good to go!")
 
     def get_window_title(self):
         """Helper function to return this window's title

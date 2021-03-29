@@ -156,6 +156,17 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
 
         self.selected_goalie_profile = goalie_name.replace(' ', '_').lower()
 
+    def reset_screen(self):
+        # Unselect the currently picked cell
+        self.main_table_view.selectedItems()[
+            0].setSelected(False)
+
+        self.goalie_profile_selection_label.setText(
+            "Please Select a Goalie Profile to Continue")
+
+    def get_selected_goalie_profile(self):
+        return self.selected_goalie_profile
+
     def get_window_title(self):
         return self.window_title
 
