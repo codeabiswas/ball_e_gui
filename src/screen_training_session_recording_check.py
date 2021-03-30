@@ -2,9 +2,11 @@ import csv
 import pathlib
 import shutil
 import sys
+import threading
 from os import RTLD_NOW
 from pathlib import Path
 
+import pyudev
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtCore import QFileSystemWatcher, Qt, left, qChecksum, right
 from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QPixmap
@@ -24,6 +26,33 @@ from component_modal import Modal
 from component_toolbar import ToolbarComponent
 from helper_profiler import Profiler
 from window_test import TestWindow
+
+
+class USBDetector():
+    ''' Monitor udev for detection of usb '''
+
+    def __init__(self):
+        ''' Initiate the object '''
+        thread = threading.Thread(target=self._work)
+        thread.daemon = True
+        thread.start()
+
+    def _work(self):
+        ''' Runs the actual loop to detect the events '''
+        self.context = pyudev.Context()
+        self.monitor = pyudev.Monitor.from_netlink(self.context)
+        self.monitor.filter_by(subsystem='usb')
+        self.monitor.start()
+        for device in iter(self.monitor.poll, None):
+            print(device.action)
+            if device.action == 'add':
+                # some function to run on insertion of usb
+                print('Inserted USB')
+                # self.on_created()
+            else:
+                # some function to run on removal of usb
+                print('Removed USB')
+                # self.on_deleted()
 
 
 class TrainingSessionRecordingCheckScreen(QWidget):
@@ -73,16 +102,10 @@ class TrainingSessionRecordingCheckScreen(QWidget):
 
         self.screen_layout.addWidget(self.next_page_button)
 
-        # /dev/ System Watcher
-        self.system_watcher = QFileSystemWatcher()
-        self.system_watcher.addPath("/dev/")
-        self.system_watcher.directoryChanged = self.checker
-
         # Set the screen layout
         self.setLayout(self.screen_layout)
 
-    def checker(self, some_path):
-        print(some_path)
+        USBDetector()
 
     def check_usb_requirement(self, required_flag):
 
