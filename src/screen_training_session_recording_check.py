@@ -118,7 +118,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
                     self.usb_connected_label.setText("You are good to go!")
                     self.usb_connected_label.setVisible(True)
                     self.next_page_button.setVisible(True)
-                    self.monitor.send_stop()
+                    self.monitor.stop()
                     return
 
     def reset_screen(self):
