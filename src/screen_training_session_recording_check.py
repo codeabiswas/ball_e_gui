@@ -97,7 +97,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.context = pyudev.Context()
             self.monitor = pyudev.Monitor.from_netlink(self.context)
             self.monitor.filter_by(subsystem='usb')
-            self.monitor.start()
+            # self.monitor.start()
             t_end = time.time() + 60
             while time.time() < t_end:
                 for device in iter(self.monitor.poll, None):
@@ -110,7 +110,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
                     else:
                         # some function to run on removal of usb
                         print('Removed USB')
-            self.monitor.stop()
+            # self.monitor.stop()
 
             self.usb_connected_label.setText(
                 "No USB detected. To try again, please select the Yes Button and follow the steps.")
