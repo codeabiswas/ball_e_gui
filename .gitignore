@@ -4,5 +4,8 @@ env/
 # Python Default Files
 __pycache__/
 
+# Temporary Files
+images/temp_traing_lax_goal.png
+
 # VSCode Settings
 .vscode/
