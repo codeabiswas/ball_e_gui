@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
                              QPushButton, QSizePolicy, QStackedLayout,
                              QStackedWidget, QTableWidget, QTableWidgetItem,
                              QTabWidget, QVBoxLayout, QWidget)
-from pyudev.pyqt5 import QUDevMonitorObserver
+from pyudev.pyqt5 import MonitorObserver
 
 import style_constants as sc
 from component_button import (GenericButton, ProfileCreateButton,
@@ -98,7 +98,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.context = pyudev.Context()
             self.monitor = pyudev.Monitor.from_netlink(self.context)
             self.monitor.filter_by(subsystem='usb')
-            self.observer = QUDevMonitorObserver(self.monitor)
+            self.observer = MonitorObserver(self.monitor)
             self.observer.deviceEvent.connect(self.find_usb)
             self.observer.start()
 
