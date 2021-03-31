@@ -105,7 +105,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
         # Set the screen layout
         self.setLayout(self.screen_layout)
 
-        USBDetector()
+        # USBDetector()
 
     def check_usb_requirement(self, required_flag):
 
@@ -115,7 +115,26 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.next_page_button.setVisible(True)
         elif required_flag:
             self.usb_connected_label.setText(
-                "Run checks to see if USB has been connected")
+                "Please insert USB now")
+
+            self.context = pyudev.Context()
+            self.monitor = pyudev.Monitor.from_netlink(self.context)
+            self.monitor.filter_by(subsystem='usb')
+            self.monitor.start()
+            for device in iter(self.monitor.poll, None):
+                if device.action == 'add':
+                    # some function to run on insertion of usb
+                    self.usb_connected_label.setText("You are good to go!")
+                    self.usb_connected_label.setVisible(True)
+                    self.next_page_button.setVisible(True)
+                    return
+                else:
+                    # some function to run on removal of usb
+                    print('Removed USB')
+            self.monitor.stop()
+
+            self.usb_connected_label.setText(
+                "No USB detected. To try again, please select the Yes Button and follow the steps.")
             self.usb_connected_label.setVisible(True)
             self.next_page_button.setVisible(False)
 

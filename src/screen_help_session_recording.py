@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import (QApplication, QListWidget, QListWidgetItem,
                              QVBoxLayout, QWidget)
 
 import helper_doc_reader as hdr
+from component_labels import ProfileLabel
+from component_modal import Modal
 from component_toolbar import ToolbarComponent
 from window_test import TestWindow
 
@@ -51,20 +53,17 @@ class SessionRecordingHelpScreen(QWidget):
     def pop_up_generator(self):
         selected_data = self.scroll.selectedIndexes()[0]
 
-        pop_up = QMessageBox()
-        pop_up.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
-        pop_up.setWindowTitle(self.window_title)
-        pop_up.setStandardButtons(QMessageBox.Close)
-        pop_up.setText(selected_data.data())
-        pop_up.setInformativeText(self.docs[selected_data.data()])
+        modal_info_layout = QVBoxLayout()
 
-        pop_up.setStyleSheet(
-            """
-            font-size: 22px;
-            """
+        answer_label = ProfileLabel(self.docs[selected_data.data()])
+        answer_label.setWordWrap(True)
+        modal_info_layout.addWidget(answer_label)
+
+        Modal(
+            type="info",
+            layout=modal_info_layout,
+            window_title=selected_data.data()
         )
-
-        pop_up.exec_()
 
     def get_window_title(self):
         return self.window_title
