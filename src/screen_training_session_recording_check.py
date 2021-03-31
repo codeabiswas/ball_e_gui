@@ -117,6 +117,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
         elif required_flag:
             self.usb_connected_label.setText(
                 "Please insert USB now")
+            self.usb_connected_label.setVisible(True)
 
             self.context = pyudev.Context()
             self.monitor = pyudev.Monitor.from_netlink(self.context)
