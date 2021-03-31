@@ -29,33 +29,6 @@ from helper_profiler import Profiler
 from window_test import TestWindow
 
 
-class USBDetector():
-    ''' Monitor udev for detection of usb '''
-
-    def __init__(self):
-        ''' Initiate the object '''
-        thread = threading.Thread(target=self._work)
-        thread.daemon = True
-        thread.start()
-
-    def _work(self):
-        ''' Runs the actual loop to detect the events '''
-        self.context = pyudev.Context()
-        self.monitor = pyudev.Monitor.from_netlink(self.context)
-        self.monitor.filter_by(subsystem='usb')
-        self.monitor.start()
-        for device in iter(self.monitor.poll, None):
-            print(device.action)
-            if device.action == 'add':
-                # some function to run on insertion of usb
-                print('Inserted USB')
-                # self.on_created()
-            else:
-                # some function to run on removal of usb
-                print('Removed USB')
-                # self.on_deleted()
-
-
 class TrainingSessionRecordingCheckScreen(QWidget):
     """Screen to create, delete, and view Drill Profiles
 
@@ -106,8 +79,6 @@ class TrainingSessionRecordingCheckScreen(QWidget):
         # Set the screen layout
         self.setLayout(self.screen_layout)
 
-        # USBDetector()
-
     def check_usb_requirement(self, required_flag):
 
         if not required_flag:
@@ -115,6 +86,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.usb_connected_label.setVisible(True)
             self.next_page_button.setVisible(True)
         elif required_flag:
+            print('HIT')
             self.yes_button.setEnabled(False)
             self.no_button.setEnabled(False)
 
