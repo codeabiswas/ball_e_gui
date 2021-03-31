@@ -248,7 +248,7 @@ class MainWindow(QMainWindow):
 
         # Screen Flows
         self.training_session_recording_check_screen.next_page_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_take_photo))
+            lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_take_photo_screen))
 
     def training_goal_calibration_take_photo_screen_flows(self):
         # Toolbar Flows
