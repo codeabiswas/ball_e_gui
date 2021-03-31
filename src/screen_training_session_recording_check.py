@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
                              QPushButton, QSizePolicy, QStackedLayout,
                              QStackedWidget, QTableWidget, QTableWidgetItem,
                              QTabWidget, QVBoxLayout, QWidget)
+from pyudev.pyqt5 import QUDevMonitorObserver
 
 import style_constants as sc
 from component_button import (GenericButton, ProfileCreateButton,
@@ -97,20 +98,9 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.context = pyudev.Context()
             self.monitor = pyudev.Monitor.from_netlink(self.context)
             self.monitor.filter_by(subsystem='usb')
-            # self.monitor.start()
-            t_end = time.time() + 60
-            while time.time() < t_end:
-                for device in iter(self.monitor.poll, None):
-                    if device.action == 'add':
-                        # some function to run on insertion of usb
-                        self.usb_connected_label.setText("You are good to go!")
-                        self.usb_connected_label.setVisible(True)
-                        self.next_page_button.setVisible(True)
-                        return
-                    else:
-                        # some function to run on removal of usb
-                        print('Removed USB')
-            # self.monitor.stop()
+            self.observer = QUDevMonitorObserver(self.monitor)
+            self.observer.deviceEvent.connect(self.find_usb)
+            self.observer.start()
 
             self.usb_connected_label.setText(
                 "No USB detected. To try again, please select the Yes Button and follow the steps.")
@@ -118,6 +108,18 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.next_page_button.setVisible(False)
             self.yes_button.setEnabled(True)
             self.no_button.setEnabled(True)
+
+    def find_usb(self):
+        t_end = time.time() + 60
+        while time.time() < t_end:
+            for device in iter(self.monitor.poll, None):
+                if device.action == 'add':
+                    # some function to run on insertion of usb
+                    self.usb_connected_label.setText("You are good to go!")
+                    self.usb_connected_label.setVisible(True)
+                    self.next_page_button.setVisible(True)
+                    self.observer.send_stop()
+                    return
 
     def reset_screen(self):
 
