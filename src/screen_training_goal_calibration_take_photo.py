@@ -40,9 +40,9 @@ class VideoThread(QThread):
     def gstreamer_pipeline(
         self,
         capture_width=1280,
-        capture_height=720,
+        capture_height=1080,
         display_width=1280,
-        display_height=720,
+        display_height=1080,
         framerate=60,
         flip_method=0,
     ):
@@ -94,17 +94,20 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         self.thread.start()
 
         self.next_page_button = GenericButton("Next")
-        self.next_page_button.clicked.connect(lambda: self.thread.stop())
+        self.next_page_button.clicked.connect(self.cleanup_steps)
         screen_layout.addWidget(self.next_page_button)
+
+        self.updated_temp_goal_image = None
 
         self.setLayout(screen_layout)
 
     def get_window_title(self):
         return self.window_title
 
-    def closeEvent(self, event):
+    def cleanup_steps(self):
+        # NOTE: This must be called so that camera pipeline is closed successfully
         self.thread.stop()
-        event.accept()
+        self.updated_temp_goal_image.save('images/temp_traing_lax_goal.png')
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
@@ -123,6 +126,7 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         display_height = 1080
         p = convert_to_Qt_format.scaled(
             display_width, display_height, Qt.KeepAspectRatio)
+        self.updated_temp_goal_image = p
         return QPixmap.fromImage(p)
 
 
