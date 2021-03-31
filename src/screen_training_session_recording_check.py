@@ -3,6 +3,7 @@ import pathlib
 import shutil
 import sys
 import threading
+import time
 from os import RTLD_NOW
 from pathlib import Path
 
@@ -121,16 +122,18 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.monitor = pyudev.Monitor.from_netlink(self.context)
             self.monitor.filter_by(subsystem='usb')
             self.monitor.start()
-            for device in iter(self.monitor.poll, None):
-                if device.action == 'add':
-                    # some function to run on insertion of usb
-                    self.usb_connected_label.setText("You are good to go!")
-                    self.usb_connected_label.setVisible(True)
-                    self.next_page_button.setVisible(True)
-                    return
-                else:
-                    # some function to run on removal of usb
-                    print('Removed USB')
+            t_end = time.time() + 60
+            while time.time() < t_end:
+                for device in iter(self.monitor.poll, None):
+                    if device.action == 'add':
+                        # some function to run on insertion of usb
+                        self.usb_connected_label.setText("You are good to go!")
+                        self.usb_connected_label.setVisible(True)
+                        self.next_page_button.setVisible(True)
+                        return
+                    else:
+                        # some function to run on removal of usb
+                        print('Removed USB')
             self.monitor.stop()
 
             self.usb_connected_label.setText(
