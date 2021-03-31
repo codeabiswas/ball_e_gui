@@ -152,6 +152,8 @@ class MainWindow(QMainWindow):
 
     def training_number_of_balls_selection_screen_flows(self, prev_screen):
         # Toolbar Flows
+        self.training_number_of_balls_selection_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
         if prev_screen == "training_screen":
             self.training_number_of_balls_selection_screen.toolbar.prev_screen_button.clicked.connect(
                 lambda: self.main_widget.setCurrentWidget(self.training_screen))
@@ -161,8 +163,10 @@ class MainWindow(QMainWindow):
         else:
             return
 
-        self.training_number_of_balls_selection_screen.toolbar.back_to_home_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        self.training_number_of_balls_selection_screen.next_page_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(
+                self.training_goal_calibration_take_photo_screen)
+        )
 
     def only_training_drill_profile_profile_selection_screen_setup(self):
 
