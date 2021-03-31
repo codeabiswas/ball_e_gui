@@ -5,7 +5,7 @@ env/
 __pycache__/
 
 # Temporary Files
-images/temp_traing_lax_goal.png
+images/temp_training_lax_goal.png
 
 # VSCode Settings
 .vscode/

@@ -48,6 +48,7 @@ class DrillCreationWidget(QWidget):
 
         painter_obj = QPainter(self.scaled_pixmap_obj)
         painter_obj.setPen(QPen(Qt.green, 12, Qt.SolidLine))
+
         # Top Line
         painter_obj.drawLine(0, 0, self.scaled_pixmap_obj.width(), 0)
         # Top 1/3 Line
@@ -72,6 +73,7 @@ class DrillCreationWidget(QWidget):
         # Right Line
         painter_obj.drawLine(self.scaled_pixmap_obj.width(), 0,
                              self.scaled_pixmap_obj.width(), self.scaled_pixmap_obj.height())
+
         painter_obj.end()
 
         self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
