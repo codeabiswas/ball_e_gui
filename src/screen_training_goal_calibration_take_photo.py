@@ -118,8 +118,10 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         bytes_per_line = ch * w
         convert_to_Qt_format = QtGui.QImage(
             rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+        display_width = 1280
+        display_height = 720
         p = convert_to_Qt_format.scaled(
-            self.disply_width, self.display_height, Qt.KeepAspectRatio)
+            display_width, display_height, Qt.KeepAspectRatio)
         return QPixmap.fromImage(p)
 
 
