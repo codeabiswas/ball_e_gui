@@ -100,7 +100,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.monitor.filter_by(subsystem='usb')
             self.observer = MonitorObserver(self.monitor)
             self.observer.deviceEvent.connect(self.find_usb)
-            self.observer.start()
+            self.monitor.start()
 
             self.usb_connected_label.setText(
                 "No USB detected. To try again, please select the Yes Button and follow the steps.")
