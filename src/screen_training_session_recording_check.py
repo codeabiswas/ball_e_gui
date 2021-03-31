@@ -94,7 +94,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
 
         self.screen_layout.addLayout(self.button_container_layout)
 
-        self.usb_connected_label = ProfileLabel("")
+        self.usb_connected_label = ProfileLabel()
         self.usb_connected_label.setVisible(False)
         self.screen_layout.addWidget(self.usb_connected_label)
 
@@ -115,6 +115,9 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.usb_connected_label.setVisible(True)
             self.next_page_button.setVisible(True)
         elif required_flag:
+            self.yes_button.setEnabled(False)
+            self.no_button.setEnabled(False)
+
             self.usb_connected_label.setText(
                 "Please insert USB now")
             self.usb_connected_label.setVisible(True)
@@ -141,6 +144,8 @@ class TrainingSessionRecordingCheckScreen(QWidget):
                 "No USB detected. To try again, please select the Yes Button and follow the steps.")
             self.usb_connected_label.setVisible(True)
             self.next_page_button.setVisible(False)
+            self.yes_button.setEnabled(True)
+            self.no_button.setEnabled(True)
 
     def reset_screen(self):
 
