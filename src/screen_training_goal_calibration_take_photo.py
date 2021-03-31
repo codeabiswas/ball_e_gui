@@ -107,8 +107,8 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
     def cleanup_steps(self):
         # NOTE: This must be called so that camera pipeline is closed successfully
         self.thread.stop()
-        cv2.write('images/temp_traing_lax_goal.png',
-                  self.updated_temp_goal_image)
+        cv2.imwrite('images/temp_traing_lax_goal.png',
+                    self.updated_temp_goal_image)
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
