@@ -165,7 +165,7 @@ class MainWindow(QMainWindow):
 
         self.training_number_of_balls_selection_screen.next_page_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(
-                self.training_goal_calibration_take_photo_screen)
+                self.training_session_recording_check_screen)
         )
 
     def only_training_drill_profile_profile_selection_screen_setup(self):
