@@ -86,17 +86,18 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         self.image_label = QLabel()
         screen_layout.addWidget(self.image_label)
 
-        self.next_page_button = GenericButton("Next")
-        screen_layout.addWidget(self.next_page_button)
-
-        self.setLayout(screen_layout)
-
         # create the video capture thread
         self.thread = VideoThread()
         # connect its signal to the update_image slot
         self.thread.change_pixmap_signal.connect(self.update_image)
         # start the thread
         self.thread.start()
+
+        self.next_page_button = GenericButton("Next")
+        self.next_page_button.clicked.connect(self.thread.stop())
+        screen_layout.addWidget(self.next_page_button)
+
+        self.setLayout(screen_layout)
 
     def get_window_title(self):
         return self.window_title
@@ -119,7 +120,7 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         convert_to_Qt_format = QtGui.QImage(
             rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
         display_width = 1280
-        display_height = 720
+        display_height = 1080
         p = convert_to_Qt_format.scaled(
             display_width, display_height, Qt.KeepAspectRatio)
         return QPixmap.fromImage(p)
