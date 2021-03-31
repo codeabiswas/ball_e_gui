@@ -87,7 +87,6 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.usb_connected_label.setVisible(True)
             self.next_page_button.setVisible(True)
         elif required_flag:
-            print('HIT')
             self.yes_button.setEnabled(False)
             self.no_button.setEnabled(False)
 
@@ -102,13 +101,6 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.observer.deviceEvent.connect(self.find_usb)
             self.monitor.start()
 
-            self.usb_connected_label.setText(
-                "No USB detected. To try again, please select the Yes Button and follow the steps.")
-            self.usb_connected_label.setVisible(True)
-            self.next_page_button.setVisible(False)
-            self.yes_button.setEnabled(True)
-            self.no_button.setEnabled(True)
-
     def find_usb(self):
         t_end = time.time() + 60
         while time.time() < t_end:
@@ -118,8 +110,15 @@ class TrainingSessionRecordingCheckScreen(QWidget):
                     self.usb_connected_label.setText("You are good to go!")
                     self.usb_connected_label.setVisible(True)
                     self.next_page_button.setVisible(True)
-                    self.monitor.stop()
+                    self.yes_button.setEnabled(True)
+                    self.no_button.setEnabled(True)
                     return
+        self.usb_connected_label.setText(
+            "No USB detected. To try again, please select the Yes Button and follow the steps.")
+        self.usb_connected_label.setVisible(True)
+        self.next_page_button.setVisible(False)
+        self.yes_button.setEnabled(True)
+        self.no_button.setEnabled(True)
 
     def reset_screen(self):
 
