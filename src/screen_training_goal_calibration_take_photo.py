@@ -94,7 +94,7 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         self.thread.start()
 
         self.next_page_button = GenericButton("Next")
-        self.next_page_button.clicked.connect(self.thread.stop())
+        self.next_page_button.clicked.connect(lambda: self.thread.stop())
         screen_layout.addWidget(self.next_page_button)
 
         self.setLayout(screen_layout)
