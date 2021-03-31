@@ -39,11 +39,11 @@ class VideoThread(QThread):
 
     def gstreamer_pipeline(
         self,
-        capture_width=1920,
-        capture_height=1080,
-        display_width=1920,
-        display_height=1080,
-        framerate=30,
+        capture_width=1280,
+        capture_height=720,
+        display_width=1280,
+        display_height=720,
+        framerate=60,
         flip_method=0,
     ):
         return (
@@ -124,8 +124,8 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         bytes_per_line = ch * w
         convert_to_Qt_format = QtGui.QImage(
             rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
-        display_width = 1920
-        display_height = 1080
+        display_width = 1280
+        display_height = 720
         p = convert_to_Qt_format.scaled(
             display_width, display_height, Qt.KeepAspectRatio)
         return QPixmap.fromImage(p)
