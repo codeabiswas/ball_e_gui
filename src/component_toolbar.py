@@ -23,7 +23,7 @@ class ToolbarButton(QPushButton):
             """
             font-size: {font_size};
             background-color: white
-            """.format(font_size="30px")  # .format(font_size=sc.FONT_M)
+            """.format(font_size=sc.FONT_M)
         )
 
 
