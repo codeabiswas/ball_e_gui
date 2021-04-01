@@ -41,8 +41,8 @@ class VideoThread(QThread):
         self,
         capture_width=1920,
         capture_height=1080,
-        display_width=1280,
-        display_height=720,
+        display_width=960,
+        display_height=540,
         framerate=30,
         flip_method=0,
     ):
@@ -75,7 +75,7 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         screen_layout = QVBoxLayout()
 
         self.toolbar = ToolbarComponent(
-            self.window_title, "Back to Session Recording Check")
+            self.window_title, "Back to Session\n Record Check")
 
         screen_layout.addWidget(self.toolbar)
 
@@ -88,7 +88,6 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
 
         # Initializing the thread to run the camera
         self.thread = None
-        # self.start_camera()
 
         self.next_page_button = GenericButton("Next")
         self.next_page_button.clicked.connect(self.cleanup_steps)
@@ -129,8 +128,8 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         bytes_per_line = ch * w
         convert_to_Qt_format = QtGui.QImage(
             rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
-        display_width = 1280
-        display_height = 720
+        display_width = 960
+        display_height = 540
         p = convert_to_Qt_format.scaled(
             display_width, display_height, Qt.KeepAspectRatio)
         return QPixmap.fromImage(p)

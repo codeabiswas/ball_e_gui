@@ -8,5 +8,5 @@ class LineEdit(QLineEdit):
         super().__init__()
 
         self.line_edit_font = self.font()
-        self.line_edit_font.setPointSize(int(sc.FONT_L[0:2]))
+        self.line_edit_font.setPointSize(int(sc.FONT_XL[0:2]))
         self.setFont(self.line_edit_font)

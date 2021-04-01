@@ -38,7 +38,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
                 self.window_title, "Back to Training")
         else:
             self.toolbar = ToolbarComponent(
-                self.window_title, "Back to Goalie Profile Selection")
+                self.window_title, "Back to Goalie\n Profile Select")
 
         screen_layout.addWidget(self.toolbar)
 

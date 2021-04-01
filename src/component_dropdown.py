@@ -8,5 +8,5 @@ class Dropdown(QComboBox):
         super().__init__()
 
         self.dropdown_font = self.font()
-        self.dropdown_font.setPointSize(int(sc.FONT_L[0:2]))
+        self.dropdown_font.setPointSize(int(sc.FONT_XL[0:2]))
         self.setFont(self.dropdown_font)

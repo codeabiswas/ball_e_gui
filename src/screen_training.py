@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QPushButton, QVBoxLayout, QWidget)
 
-from component_button import GenericButton
+from component_button import FullPageButton, GenericButton
 from component_toolbar import ToolbarComponent
 from window_test import TestWindow
 
@@ -23,9 +23,9 @@ class TrainingScreen(QWidget):
 
         button_layout = QHBoxLayout()
 
-        self.load_goalie_profile_button = GenericButton("Load Goalie Profile")
-        self.load_drill_profile_button = GenericButton("Load Drill Profile")
-        self.manual_session_button = GenericButton("Manual Session")
+        self.load_goalie_profile_button = FullPageButton("Load Goalie Profile")
+        self.load_drill_profile_button = FullPageButton("Load Drill Profile")
+        self.manual_session_button = FullPageButton("Manual Session")
 
         button_layout.addWidget(self.load_goalie_profile_button)
         button_layout.addWidget(self.load_drill_profile_button)

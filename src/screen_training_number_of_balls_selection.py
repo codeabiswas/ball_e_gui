@@ -47,7 +47,7 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         # Create a toolback object and add it to the top of the layout
         if prev_screen == "training_drill_profile_choice_screen":
             self.toolbar = ToolbarComponent(
-                self.window_title, "Back to Drill Profile Choice")
+                self.window_title, "Back to Drill\n Profile Choice")
             # Get the drill profiles available on the device
             self.profiler = Profiler('drill_profiles')
             # Drill TBE: Drill To Be Executed
@@ -56,7 +56,7 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
             self.required_ball_num = self.get_drill_required_balls()
         elif prev_screen == "training_screen":
             self.toolbar = ToolbarComponent(
-                self.window_title, "Back to Training Choice")
+                self.window_title, "Back to Training\n Choice")
         else:
             return
 

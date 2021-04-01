@@ -25,7 +25,7 @@ class TrainingGoalCalibration(QWidget):
         screen_layout = QVBoxLayout()
 
         self.toolbar = ToolbarComponent(
-            self.window_title, "Back to Goal Calibration Setup")
+            self.window_title, "Back to Goal Calib. \nSetup")
 
         screen_layout.addWidget(self.toolbar)
 

@@ -12,6 +12,24 @@ class GenericButton(QPushButton):
             QSizePolicy.Expanding
         )
 
+        self.setMaximumHeight(int(sc.FONT_XL[:2]))
+
+        self.setStyleSheet(
+            """
+            font-size: {font_size};
+            """.format(font_size=sc.FONT_L)
+        )
+
+
+class FullPageButton(QPushButton):
+    def __init__(self, button_title):
+        super().__init__()
+        self.setText(button_title)
+        self.setSizePolicy(
+            QSizePolicy.Preferred,
+            QSizePolicy.Expanding
+        )
+
         self.setStyleSheet(
             """
             font-size: {font_size};

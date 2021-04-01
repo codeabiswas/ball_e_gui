@@ -20,8 +20,8 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
 from pyudev.pyqt5 import MonitorObserver
 
 import style_constants as sc
-from component_button import (GenericButton, ProfileCreateButton,
-                              ProfileDeleteButton)
+from component_button import (FullPageButton, GenericButton,
+                              ProfileCreateButton, ProfileDeleteButton)
 from component_drill_creation_widget import DrillCreationWidget
 from component_labels import ProfileLabel, TableHeaderLabel
 from component_modal import Modal
@@ -52,7 +52,7 @@ class TrainingAutomatedSessionScreen(QWidget):
         self.screen_layout = QVBoxLayout()
 
         self.toolbar = ToolbarComponent(
-            self.window_title, "Back to Goal Calibration")
+            self.window_title, "Back to Goal Calib.")
 
         self.screen_layout.addWidget(self.toolbar)
 
@@ -69,11 +69,11 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         self.button_layout = QVBoxLayout()
 
-        self.start_button = GenericButton("Start")
+        self.start_button = FullPageButton("Start")
         self.button_layout.addWidget(self.start_button)
-        self.pause_button = GenericButton("Pause")
+        self.pause_button = FullPageButton("Pause")
         self.button_layout.addWidget(self.pause_button)
-        self.stop_button = GenericButton("Stop")
+        self.stop_button = FullPageButton("Stop")
         self.button_layout.addWidget(self.stop_button)
 
         self.row_layout.addLayout(self.button_layout)

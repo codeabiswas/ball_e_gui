@@ -48,7 +48,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
         self.screen_layout = QVBoxLayout()
 
         self.toolbar = ToolbarComponent(
-            self.window_title, "Back to Num. of Balls Selection")
+            self.window_title, "Back to # of Balls\n Select")
 
         self.screen_layout.addWidget(self.toolbar)
 
