@@ -279,7 +279,7 @@ class MainWindow(QMainWindow):
 
         # Screen Flows
         self.training_goal_calibration_screen.next_page_button.clicked.connect(
-            self.training_auomated_or_manual_session_screen_setup)
+            self.training_automated_or_manual_session_screen_setup)
 
     def training_automated_or_manual_session_screen_setup(self):
         if self.manual_session:
