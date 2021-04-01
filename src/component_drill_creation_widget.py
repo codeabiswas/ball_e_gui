@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
 
 import style_constants as sc
 from component_button import ProfileCreateButton, ProfileDeleteButton
+from component_dropdown import Dropdown
 from component_labels import ProfileLabel, TableHeaderLabel
 from component_modal import Modal
 from component_toolbar import ToolbarComponent
@@ -79,7 +80,7 @@ class DrillCreationWidget(QWidget):
         self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
 
         speed_selection_label = ProfileLabel("Ball Speed")
-        speed_selection_dropdown = QComboBox()
+        speed_selection_dropdown = Dropdown()
         for ball_count in range(sc.MIN_BALL_SPEED, sc.MAX_BALL_SPEED+1, 5):
             speed_selection_dropdown.addItem(str(ball_count))
         speed_selection_dropdown.currentIndexChanged.connect(

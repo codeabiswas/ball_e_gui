@@ -29,7 +29,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
 
         # This font will be used for all table related purposes
         self.table_font = QFont()
-        self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+        self.table_font.setPixelSize(int(sc.FONT_L[:2]))
 
         screen_layout = QVBoxLayout()
 
@@ -48,18 +48,20 @@ class TrainingDrillProfileSelectionScreen(QWidget):
             "Please Select a Drill Profile to Continue")
         screen_layout_row_one.addWidget(self.drill_profile_selection_label)
 
-        self.next_page_button = QPushButton("Next")
+        self.next_page_button = GenericButton("Next")
         self.next_page_button.setVisible(False)
         screen_layout_row_one.addWidget(self.next_page_button)
         screen_layout.addLayout(screen_layout_row_one)
 
         self.create_table_header_view(
             table_title_name="Drill Profiles", header_clicked_action=self.unselect_table_header)
+        self.table_header.resizeRowsToContents()
         screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
         self.create_main_table_view(profile_dict_obj=self.drill_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
+        self.main_table_view.resizeRowsToContents()
         screen_layout.addWidget(self.main_table_view)
 
         self.setLayout(screen_layout)
@@ -99,11 +101,12 @@ class TrainingDrillProfileSelectionScreen(QWidget):
 
         # Size the header appropriately
         header_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
-        self.table_header.setSizePolicy(
-            QSizePolicy.Preferred,
-            QSizePolicy.Fixed
-        )
-        self.table_header.setFixedHeight(sc.TABLE_HEADER_HEIGHT)
+        # self.table_header.setSizePolicy(
+        #     QSizePolicy.Preferred,
+        #     QSizePolicy.Fixed
+        # )
+        self.table_header.setFixedHeight(
+            int(self.table_header.sizeHint().height()/2))
 
     def unselect_table_header(self):
         # Unselect the currently picked cell

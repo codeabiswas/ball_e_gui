@@ -14,8 +14,10 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDesktopWidget,
                              QTableWidgetItem, QVBoxLayout, QWidget)
 
 import style_constants as sc
-from component_button import ProfileCreateButton, ProfileDeleteButton
+from component_button import (GenericButton, ProfileCreateButton,
+                              ProfileDeleteButton)
 from component_labels import ProfileLabel, TableHeaderLabel
+from component_lineedit import LineEdit
 from component_modal import Modal
 from component_toolbar import ToolbarComponent
 from helper_profiler import Profiler
@@ -42,7 +44,7 @@ class GoalieProfilesScreen(QWidget):
 
         # This font will be used for all table related purposes
         self.table_font = QFont()
-        self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+        self.table_font.setPixelSize(int(sc.FONT_L[:2]))
 
         # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
@@ -55,11 +57,13 @@ class GoalieProfilesScreen(QWidget):
         self.create_table_header_view(
             table_title_name="Goalie Profiles",
             header_clicked_action=self.create_new_goalie_profile_modal)
+        self.table_header.resizeRowsToContents()
         self.screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
         self.create_main_table_view(profile_dict_obj=self.goalie_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
+        self.main_table_view.resizeRowsToContents()
         self.screen_layout.addWidget(self.main_table_view)
 
         # Set the screen layout
@@ -173,7 +177,8 @@ class GoalieProfilesScreen(QWidget):
             QSizePolicy.Preferred,
             QSizePolicy.Fixed
         )
-        self.table_header.setFixedHeight(sc.TABLE_HEADER_HEIGHT)
+        self.table_header.setFixedHeight(
+            int(self.table_header.sizeHint().height()/2))
 
     def get_goalie_profiles_info(self):
         """Updates the backend with goalie profile info
@@ -247,9 +252,9 @@ class GoalieProfilesScreen(QWidget):
             create_goalie_profile_modal_layout = QHBoxLayout()
             create_goalie_profile_modal_layout.addWidget(
                 ProfileLabel("Name: "))
-            goalie_name_input = QLineEdit()
+            goalie_name_input = LineEdit()
             create_goalie_profile_modal_layout.addWidget(goalie_name_input)
-            new_goalie_profile_save_button = QPushButton("Save")
+            new_goalie_profile_save_button = GenericButton("Save")
             new_goalie_profile_save_button.clicked.connect(
                 lambda: self.create_new_goalie_profile(goalie_name_input.text()))
             create_goalie_profile_modal_layout.addWidget(
@@ -364,7 +369,7 @@ class GoalieProfilesScreen(QWidget):
         for curr_row, (drill_info, date_info) in enumerate(zip(goalie_info.keys(), goalie_info.values())):
             drill_name_widget = QTableWidgetItem(drill_info)
             date_info_widget = QTableWidgetItem(date_info)
-            self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+            self.table_font.setPixelSize(int(sc.FONT_L[:2]))
             drill_name_widget.setFont(self.table_font)
             date_info_widget.setFont(self.table_font)
             drill_name_widget.setTextAlignment(Qt.AlignCenter)
@@ -373,19 +378,14 @@ class GoalieProfilesScreen(QWidget):
             table_view.setItem(curr_row, 1, date_info_widget)
 
         table_view.setHorizontalHeaderLabels(
-            ["Drill History", "Date Performed"])
+            ["Drill History", "Date"])
         table_view.verticalHeader().setVisible(False)
+        table_view.resizeRowsToContents()
 
         table_view.horizontalHeader().setStyleSheet(
             """
             font-size: {font_size}
-            """.format(font_size=sc.FONT_M)
-        )
-
-        table_view.verticalHeader().setStyleSheet(
-            """
-            font-size: {font_size}
-            """.format(font_size=sc.FONT_M)
+            """.format(font_size=sc.FONT_L)
         )
 
         table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)

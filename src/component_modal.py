@@ -1,10 +1,12 @@
 import sys
+from typing import Generic
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QDesktopWidget, QDialog, QHBoxLayout, QLabel,
                              QPushButton, QVBoxLayout, QWidget)
 
 import style_constants as sc
+from component_button import GenericButton
 
 
 class Modal(QDialog):
@@ -55,8 +57,8 @@ class Modal(QDialog):
             )
             heading_bar_label.setText(window_title)
 
-            self.yes_button = QPushButton("Yes")
-            no_button = QPushButton("No")
+            self.yes_button = GenericButton("Yes")
+            no_button = GenericButton("No")
             decision_buttons_layout = QHBoxLayout()
             decision_buttons_layout.addWidget(self.yes_button)
             decision_buttons_layout.addWidget(no_button)

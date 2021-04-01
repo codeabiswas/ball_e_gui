@@ -16,9 +16,12 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
                              QTabWidget, QVBoxLayout, QWidget)
 
 import style_constants as sc
-from component_button import ProfileCreateButton, ProfileDeleteButton
+from component_button import (GenericButton, ProfileCreateButton,
+                              ProfileDeleteButton)
 from component_drill_creation_widget import DrillCreationWidget
+from component_dropdown import Dropdown
 from component_labels import ProfileLabel, TableHeaderLabel
+from component_lineedit import LineEdit
 from component_modal import Modal
 from component_toolbar import ToolbarComponent
 from helper_profiler import Profiler
@@ -51,7 +54,7 @@ class DrillProfilesScreen(QWidget):
 
         # This font will be used for all table related purposes
         self.table_font = QFont()
-        self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+        self.table_font.setPixelSize(int(sc.FONT_L[:2]))
 
         # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
@@ -64,12 +67,13 @@ class DrillProfilesScreen(QWidget):
         self.create_table_header_view(
             table_title_name="Drill Profiles",
             header_clicked_action=self.create_new_drill_profile_modal_page_one)
-        # header_clicked_action=self.create_new_drill_profile_modal)
+        self.table_header.resizeRowsToContents()
         self.screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
         self.create_main_table_view(profile_dict_obj=self.drill_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
+        self.main_table_view.resizeRowsToContents()
         self.screen_layout.addWidget(self.main_table_view)
 
         # Set the screen layout
@@ -179,11 +183,8 @@ class DrillProfilesScreen(QWidget):
         header_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
         header_hor_head.setSectionResizeMode(
             1, QHeaderView.ResizeToContents)
-        self.table_header.setSizePolicy(
-            QSizePolicy.Preferred,
-            QSizePolicy.Fixed
-        )
-        self.table_header.setFixedHeight(sc.TABLE_HEADER_HEIGHT)
+        self.table_header.setFixedHeight(
+            int(self.table_header.sizeHint().height()/2))
 
     def get_drill_profiles_info(self):
         """Updates the backend with drill profile info
@@ -321,7 +322,7 @@ class DrillProfilesScreen(QWidget):
             ball_number_widget = QTableWidgetItem(ball_number)
             ball_target_location_widget = QTableWidgetItem(ball_specifics[0])
             ball_speed_widget = QTableWidgetItem(ball_specifics[1])
-            self.table_font.setPixelSize(int(sc.FONT_M[:2]))
+            self.table_font.setPixelSize(int(sc.FONT_L[:2]))
             ball_number_widget.setFont(self.table_font)
             ball_target_location_widget.setFont(self.table_font)
             ball_speed_widget.setFont(self.table_font)
@@ -334,19 +335,14 @@ class DrillProfilesScreen(QWidget):
             drill_rof = ball_specifics[2]
 
         table_view.setHorizontalHeaderLabels(
-            ["Ball #", "Target Location", "Ball Speed"])
+            ["Ball #", "Location", "Speed"])
         table_view.verticalHeader().setVisible(False)
+        table_view.resizeRowsToContents()
 
         table_view.horizontalHeader().setStyleSheet(
             """
             font-size: {font_size}
-            """.format(font_size=sc.FONT_M)
-        )
-
-        table_view.verticalHeader().setStyleSheet(
-            """
-            font-size: {font_size}
-            """.format(font_size=sc.FONT_M)
+            """.format(font_size=sc.FONT_L)
         )
 
         table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
@@ -390,12 +386,12 @@ class DrillProfilesScreen(QWidget):
             # Captures the name of the drill
             modal_page_one_row_one_layout.addWidget(
                 ProfileLabel("Name: "))
-            drill_name_input = QLineEdit()
+            drill_name_input = LineEdit()
             modal_page_one_row_one_layout.addWidget(drill_name_input)
             modal_page_one_layout.addLayout(modal_page_one_row_one_layout)
 
             # Goes to the Next Page
-            next_button = QPushButton("Next")
+            next_button = GenericButton("Next")
             modal_page_one_layout.addWidget(next_button)
 
             create_new_page_one.setLayout(modal_page_one_layout)
@@ -456,7 +452,7 @@ class DrillProfilesScreen(QWidget):
         # Dropdown for the selection number of balls
         create_new_page_two_row_one_layout.addWidget(
             ProfileLabel("# of Balls: "))
-        num_balls_input = QComboBox()
+        num_balls_input = Dropdown()
         for ball_count in range(sc.MAX_BALL_COUNT):
             num_balls_input.addItem(str(ball_count+1))
         num_balls_input.currentIndexChanged.connect(
@@ -466,7 +462,7 @@ class DrillProfilesScreen(QWidget):
         # Dropdown for the Rate of Fire
         create_new_page_two_row_two_layout.addWidget(
             ProfileLabel("Rate of Fire: "))
-        rate_of_fire_input = QComboBox()
+        rate_of_fire_input = Dropdown()
         for rate_of_fire in range(sc.MIN_ROF, sc.MAX_ROF+1):
             rate_of_fire_input.addItem(str(rate_of_fire))
         rate_of_fire_input.currentIndexChanged.connect(
@@ -478,7 +474,7 @@ class DrillProfilesScreen(QWidget):
             create_new_page_two_row_two_layout)
 
         # Goes to the Next Page
-        next_button = QPushButton("Next")
+        next_button = GenericButton("Next")
         create_new_page_two_layout.addWidget(next_button)
 
         next_button.clicked.connect(
@@ -524,12 +520,12 @@ class DrillProfilesScreen(QWidget):
 
         create_new_page_three_layout.addWidget(modal_page_three_tab_widget)
 
-        back_button = QPushButton("Back")
+        back_button = GenericButton("Back")
         back_button.clicked.connect(
             lambda: self.create_new_drill_profile_modal_page_two(create_new_page_three, drill_name, after_name_input=False))
         create_new_page_three_layout.addWidget(back_button)
 
-        save_button = QPushButton("Save")
+        save_button = GenericButton("Save")
         save_button.clicked.connect(
             lambda: create_new_page_three.accept())
         create_new_page_three_layout.addWidget(save_button)

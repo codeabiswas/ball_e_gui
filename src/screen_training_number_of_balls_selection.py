@@ -16,8 +16,10 @@ from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
                              QTabWidget, QVBoxLayout, QWidget)
 
 import style_constants as sc
-from component_button import ProfileCreateButton, ProfileDeleteButton
+from component_button import (GenericButton, ProfileCreateButton,
+                              ProfileDeleteButton)
 from component_drill_creation_widget import DrillCreationWidget
+from component_dropdown import Dropdown
 from component_labels import ProfileLabel, TableHeaderLabel
 from component_modal import Modal
 from component_toolbar import ToolbarComponent
@@ -65,7 +67,7 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
 
         self.curr_ball_num = sc.MIN_BALL_COUNT
 
-        number_of_balls_input = QComboBox()
+        number_of_balls_input = Dropdown()
         for ball in range(sc.MIN_BALL_COUNT, sc.MAX_BALL_COUNT+1):
             number_of_balls_input.addItem(str(ball))
         number_of_balls_input.currentIndexChanged.connect(
@@ -74,7 +76,7 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         self.screen_layout.addWidget(number_of_balls_input)
 
         if prev_screen == "training_drill_profile_choice_screen":
-            self.check_button = QPushButton("Check")
+            self.check_button = GenericButton("Check")
             self.check_button.clicked.connect(self.check_ball_requirement)
             self.screen_layout.addWidget(self.check_button)
 
@@ -83,7 +85,7 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         self.screen_layout.addWidget(self.enough_balls_label)
 
         # Connect this button on the Main Page Window to act accordingly - whether Drill Profile or Manual Session was selected
-        self.next_page_button = QPushButton("Next")
+        self.next_page_button = GenericButton("Next")
         self.next_page_button.setVisible(False)
 
         self.screen_layout.addWidget(self.next_page_button)

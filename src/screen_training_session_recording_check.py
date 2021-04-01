@@ -72,7 +72,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
         self.usb_connected_label.setVisible(False)
         self.screen_layout.addWidget(self.usb_connected_label)
 
-        self.next_page_button = QPushButton("Next")
+        self.next_page_button = GenericButton("Next")
         self.next_page_button.setVisible(False)
 
         self.screen_layout.addWidget(self.next_page_button)
