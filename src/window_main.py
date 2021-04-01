@@ -286,15 +286,31 @@ class MainWindow(QMainWindow):
             self.training_manual_session_screen = screen_training_manual_session.TrainingManualSessionScreen(
                 self.training_number_of_balls_selection_screen.get_session_ball_number()
             )
+            self.training_manual_session_screen_flows()
             self.main_widget.addWidget(self.training_manual_session_screen)
             self.main_widget.setCurrentWidget(
                 self.training_manual_session_screen)
         else:
             self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
                 self.training_drill_profile_selection_screen.get_selected_drill_profile(), self.training_number_of_balls_selection_screen.get_session_ball_number())
+            self.training_automated_session_screen_flows()
             self.main_widget.addWidget(self.training_automated_session_screen)
             self.main_widget.setCurrentWidget(
                 self.training_automated_session_screen)
+
+    def training_automated_session_screen_flows(self):
+        # Toolbar Flows
+        self.training_automated_session_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        self.training_automated_session_screen.toolbar.prev_screen_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_screen))
+
+    def training_manual_session_screen_flows(self):
+        # Toolbar Flows
+        self.training_manual_session_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        self.training_manual_session_screen.toolbar.prev_screen_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_screen))
 
     def profiles_screen_flows(self):
         # Toolbar Flows
