@@ -100,6 +100,9 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         if prev_screen == "training_screen":
             self.next_page_button.setVisible(True)
 
+    def get_session_ball_number(self):
+        return self.curr_ball_num
+
     def check_ball_requirement(self):
         if self.curr_ball_num < self.get_drill_required_balls():
             self.enough_balls_label.setText(

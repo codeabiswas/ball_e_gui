@@ -14,10 +14,12 @@ import screen_help_training
 import screen_home
 import screen_profiles
 import screen_training
+import screen_training_automated_session
 import screen_training_drill_profile_selection
 import screen_training_goal_calibration
 import screen_training_goal_calibration_take_photo
 import screen_training_goalie_profile_selection
+import screen_training_manual_session
 import screen_training_number_of_balls_selection
 import screen_training_session_recording_check
 
@@ -27,6 +29,9 @@ class MainWindow(QMainWindow):
         super().__init__(parent=parent)
         self.setWindowFlag(Qt.FramelessWindowHint)
         self.showFullScreen()
+
+        # Whether or not a Manual Session has been selected by user, defaults to False
+        self.manual_session = False
 
         # All screens setup
         self.home_screen = screen_home.HomeScreen()
@@ -137,6 +142,7 @@ class MainWindow(QMainWindow):
         )
 
     def manual_session_training_number_of_balls_selection_screen_setup(self):
+        self.manual_session = True
         prev_screen = "training_screen"
 
         self.training_number_of_balls_selection_screen = screen_training_number_of_balls_selection.TrainingNumberOfBallsSelectionScreen(
@@ -169,6 +175,7 @@ class MainWindow(QMainWindow):
         )
 
     def only_training_drill_profile_profile_selection_screen_setup(self):
+        self.manual_session = False
 
         self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen()
 
@@ -195,6 +202,8 @@ class MainWindow(QMainWindow):
         )
 
     def training_goalie_then_drill_profile_selection_screen_setup(self):
+        self.manual_session = False
+
         goalie_selected = self.training_goalie_profile_selection_screen.get_selected_goalie_profile()
 
         self.training_goalie_profile_selection_screen.reset_screen()
@@ -270,7 +279,22 @@ class MainWindow(QMainWindow):
 
         # Screen Flows
         self.training_goal_calibration_screen.next_page_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.training_bluetooth_button_connect_screen))
+            self.training_auomated_or_manual_session_screen_setup)
+
+    def training_automated_or_manual_session_screen_setup(self):
+        if self.manual_session:
+            self.training_manual_session_screen = screen_training_manual_session.TrainingManualSessionScreen(
+                self.training_number_of_balls_selection_screen.get_session_ball_number()
+            )
+            self.main_widget.addWidget(self.training_manual_session_screen)
+            self.main_widget.setCurrentWidget(
+                self.training_manual_session_screen)
+        else:
+            self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
+                self.training_drill_profile_selection_screen.get_selected_drill_profile(), self.training_number_of_balls_selection_screen.get_session_ball_number())
+            self.main_widget.addWidget(self.training_automated_session_screen)
+            self.main_widget.setCurrentWidget(
+                self.training_automated_session_screen)
 
     def profiles_screen_flows(self):
         # Toolbar Flows
