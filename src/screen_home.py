@@ -50,7 +50,7 @@ class HomeScreenTitle(QLabel):
         self.setStyleSheet(
             """
             color: black;
-            font-size: 80px;
+            font-size: 100px;
             font-weight: bold
             """
         )
