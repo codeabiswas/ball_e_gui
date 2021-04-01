@@ -23,7 +23,7 @@ class ToolbarButton(QPushButton):
             """
             font-size: {font_size};
             background-color: white
-            """.format(font_size=sc.FONT_M)
+            """.format(font_size=sc.FONT_L)
         )
 
 
@@ -36,7 +36,7 @@ class ToolbarTitle(QLabel):
             color: white;
             font-size: {font_size};
             font-weight: bold
-            """.format(font_size=sc.FONT_XXL)
+            """.format(font_size=sc.FONT_XL)
         )
         self.setAlignment(Qt.AlignCenter)
 
@@ -51,7 +51,7 @@ class ToolbarComponent(QWidget):
             """.format(background_color=sc.COLOR_TOOLBAR)
         )
 
-        self.setFixedHeight(int(0.05*sc.SCREEN_WIDTH))
+        self.setFixedHeight(int(0.15*sc.SCREEN_WIDTH))
 
         self.toolbar_layout = QHBoxLayout()
         self.toolbar_layout.setContentsMargins(0, 0, 0, 0)

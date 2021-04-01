@@ -86,12 +86,9 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         self.image_label = QLabel()
         screen_layout.addWidget(self.image_label)
 
-        # create the video capture thread
-        self.thread = VideoThread()
-        # connect its signal to the update_image slot
-        self.thread.change_pixmap_signal.connect(self.update_image)
-        # start the thread
-        self.thread.start()
+        # Initializing the thread to run the camera
+        self.thread = None
+        # self.start_camera()
 
         self.next_page_button = GenericButton("Next")
         self.next_page_button.clicked.connect(self.cleanup_steps)
@@ -103,6 +100,14 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
 
     def get_window_title(self):
         return self.window_title
+
+    def start_camera(self):
+        # create the video capture thread
+        self.thread = VideoThread()
+        # connect its signal to the update_image slot
+        self.thread.change_pixmap_signal.connect(self.update_image)
+        # start the thread
+        self.thread.start()
 
     def cleanup_steps(self):
         # NOTE: This must be called so that camera pipeline is closed successfully

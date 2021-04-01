@@ -79,6 +79,7 @@ class GoalieProfilesScreen(QWidget):
 
         # Create the main table widget where data will be populated
         self.main_table_view = QTableWidget()
+
         # Do not allow the user to edit the contents of the table
         self.main_table_view.setEditTriggers(
             QtWidgets.QTableWidget.NoEditTriggers)
@@ -347,6 +348,20 @@ class GoalieProfilesScreen(QWidget):
         modal_layout = QVBoxLayout()
 
         table_view = QTableWidget()
+        table_view.verticalScrollBar().setStyleSheet(
+            "QScrollBar:vertical { width: 100px; }"
+        )
+        # table_view_scrollbar = self.main_table_view.verticalScrollBar()
+        # table_view_scrollbar.setFixedWidth(100)
+        # table_view.setVerticalScrollBar(
+        #     table_view_scrollbar)
+
+        # self.main_table_view.verticalScrollBar().setStyleSheet(
+        #     """
+
+        #     width: 30px;
+        #     """
+        # )
         table_view.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         goalie_info = self.profiler.get_profile_info(goalie_profile_path)
 

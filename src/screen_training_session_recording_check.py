@@ -89,6 +89,7 @@ class TrainingSessionRecordingCheckScreen(QWidget):
         elif required_flag:
             self.yes_button.setEnabled(False)
             self.no_button.setEnabled(False)
+            self.next_page_button.setVisible(False)
 
             self.usb_connected_label.setText(
                 "Please insert USB now")
@@ -102,17 +103,18 @@ class TrainingSessionRecordingCheckScreen(QWidget):
             self.monitor.start()
 
     def find_usb(self):
-        t_end = time.time() + 60
-        while time.time() < t_end:
-            for device in iter(self.monitor.poll, None):
-                if device.action == 'add':
-                    # some function to run on insertion of usb
-                    self.usb_connected_label.setText("You are good to go!")
-                    self.usb_connected_label.setVisible(True)
-                    self.next_page_button.setVisible(True)
-                    self.yes_button.setEnabled(True)
-                    self.no_button.setEnabled(True)
-                    return
+        # t_end = time.time() + 60
+        # while time.time() < t_end:
+        device = self.monitor.poll(timeout=60)
+        # for device in iter(self.monitor.poll(timeout=60), None):
+        if device.action == 'add':
+            # some function to run on insertion of usb
+            self.usb_connected_label.setText("You are good to go!")
+            self.usb_connected_label.setVisible(True)
+            self.next_page_button.setVisible(True)
+            self.yes_button.setEnabled(True)
+            self.no_button.setEnabled(True)
+            return
         self.usb_connected_label.setText(
             "No USB detected. To try again, please select the Yes Button and follow the steps.")
         self.usb_connected_label.setVisible(True)
