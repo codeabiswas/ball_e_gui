@@ -6,7 +6,7 @@ FONT_S = "16px"
 FONT_M = "22px"
 FONT_L = "40px"
 FONT_XL = "50px"
-FONT_XXL = "60px"
+FONT_XXL = "80px"
 
 COLOR_TOOLBAR = "#2E75B6"
 COLOR_INFO = "#C55A11"

@@ -14,13 +14,15 @@ class Modal(QDialog):
     def __init__(self, type, layout, window_title):
         super().__init__()
 
-        self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint |
+                            Qt.WindowCloseButtonHint | Qt.FramelessWindowHint)
         self.setWindowTitle(window_title)
 
         modal_layout = QVBoxLayout()
         heading_bar = QWidget()
         heading_bar_layout = QHBoxLayout()
-        heading_bar.setFixedHeight(int(0.03*sc.SCREEN_WIDTH))
+        # heading_bar.setFixedHeight(int(0.03*sc.SCREEN_WIDTH))
+        heading_bar.setMinimumHeight(int(0.05*sc.SCREEN_WIDTH))
 
         heading_bar_label = QLabel()
 
@@ -29,7 +31,7 @@ class Modal(QDialog):
             """
             font-size: {font_size};
             color: white;
-            """.format(font_size=sc.FONT_L)
+            """.format(font_size=sc.FONT_XL)
         )
         heading_bar_layout.addWidget(heading_bar_label)
 
@@ -76,9 +78,13 @@ class Modal(QDialog):
             modal_layout.addLayout(decision_buttons_layout)
         else:
             modal_layout.addLayout(layout)
+            close_modal_button = GenericButton("Close")
+            close_modal_button.clicked.connect(lambda: self.close())
+            modal_layout.addWidget(close_modal_button)
 
         self.setLayout(modal_layout)
-        self.setMinimumWidth(int(0.25*sc.SCREEN_WIDTH))
+        self.setMinimumWidth(int(0.5*sc.SCREEN_WIDTH))
+        self.setMinimumHeight(int(0.5*sc.SCREEN_HEIGHT))
 
         if not type == "choice":
             self.exec_()

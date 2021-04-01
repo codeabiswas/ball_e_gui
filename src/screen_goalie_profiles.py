@@ -200,7 +200,7 @@ class GoalieProfilesScreen(QWidget):
 
             check_delete_modal_layout = QVBoxLayout()
             check_delete_modal_layout.addWidget(
-                QLabel("Are you sure you want to delete this goalie profile?"))
+                ProfileLabel("Are you sure you want to delete this goalie profile?"))
             check_delete_modal = Modal(
                 type="choice",
                 layout=check_delete_modal_layout,
@@ -314,7 +314,7 @@ class GoalieProfilesScreen(QWidget):
         # Let the user know that the profile exists using a modal
         except FileExistsError:
             error_modal_layout = QVBoxLayout()
-            error_modal_layout.addWidget(QLabel("Goalie Exists"))
+            error_modal_layout.addWidget(ProfileLabel("Goalie Exists"))
             Modal(
                 type="error",
                 layout=error_modal_layout,
@@ -331,7 +331,7 @@ class GoalieProfilesScreen(QWidget):
         # If the selected row was newly created, then just display the modal saying "No information yet and quit"
         if table_row >= self.curr_goalie_profiles_len:
             info_modal_layout = QVBoxLayout()
-            info_modal_layout.addWidget(QLabel("No information yet."))
+            info_modal_layout.addWidget(ProfileLabel("No information yet."))
             Modal(
                 type="info",
                 layout=info_modal_layout,
@@ -353,7 +353,7 @@ class GoalieProfilesScreen(QWidget):
         # If no info has been populated, also show that "No information yet" and quit
         if(len(goalie_info) == 0):
             info_modal_layout = QVBoxLayout()
-            info_modal_layout.addWidget(QLabel("No information yet."))
+            info_modal_layout.addWidget(ProfileLabel("No information yet."))
             Modal(
                 type="info",
                 layout=info_modal_layout,

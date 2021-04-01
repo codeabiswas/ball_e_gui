@@ -205,7 +205,7 @@ class DrillProfilesScreen(QWidget):
         elif item.column() == 1:
             check_delete_modal_layout = QVBoxLayout()
             check_delete_modal_layout.addWidget(
-                QLabel("Are you sure you want to delete this drill profile?"))
+                ProfileLabel("Are you sure you want to delete this drill profile?"))
             check_delete_modal = Modal(
                 type="choice",
                 layout=check_delete_modal_layout,
@@ -288,7 +288,7 @@ class DrillProfilesScreen(QWidget):
         # Let the user know that the profile exists using a modal
         except FileExistsError:
             error_modal_layout = QVBoxLayout()
-            error_modal_layout.addWidget(QLabel("Drill Exists"))
+            error_modal_layout.addWidget(ProfileLabel("Drill Exists"))
             Modal(
                 type="error",
                 layout=error_modal_layout,
@@ -427,7 +427,7 @@ class DrillProfilesScreen(QWidget):
         if after_name_input:
             if Path(drill_location).is_dir():
                 error_modal_layout = QVBoxLayout()
-                error_modal_layout.addWidget(QLabel("Drill Exists"))
+                error_modal_layout.addWidget(ProfileLabel("Drill Exists"))
                 Modal(
                     type="error",
                     layout=error_modal_layout,

@@ -11,7 +11,7 @@ class ProfileLabel(QLabel):
             """
             color: black;
             font-size: {font_size};
-            """.format(font_size=sc.FONT_M)
+            """.format(font_size=sc.FONT_L)
         )
 
 
