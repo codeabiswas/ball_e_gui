@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         # For the Number of Balls selection screen, the previous screen needs to be known, therefore it will be called from the respective flow
         self.training_session_recording_check_screen = screen_training_session_recording_check.TrainingSessionRecordingCheckScreen()
         self.training_goal_calibration_take_photo_screen = screen_training_goal_calibration_take_photo.TrainingGoalCalibrationTakePhotoScreen()
-        self.training_goal_calibration_screen = screen_training_goal_calibration.TrainingGoalCalibration()
+        self.training_goal_calibration_screen = screen_training_goal_calibration.TrainingGoalCalibrationScreen()
 
         self.profiles_screen = screen_profiles.ProfilesScreen()
         self.goalie_profiles_screen = screen_goalie_profiles.GoalieProfilesScreen()
@@ -56,6 +56,8 @@ class MainWindow(QMainWindow):
 
         # The Stacked Widget
         self.main_widget = QtWidgets.QStackedWidget()
+        # When the widget in the stacked widget changes, it will call this function
+        self.main_widget.currentChanged.connect(self.stacked_widget_updated)
         self.setCentralWidget(self.main_widget)
 
         # Adding all screens to the stacked widget
@@ -115,6 +117,18 @@ class MainWindow(QMainWindow):
         # Session Recording Help Screen Flows
         self.session_recording_help_screen_flows()
 
+    def stacked_widget_updated(self, index):
+        curr_widget = self.main_widget.currentWidget()
+        # Extract the class name
+        curr_widget_class_name = curr_widget.__class__.__name__
+
+        if curr_widget_class_name == "TrainingGoalieProfileSelectionScreen":
+            self.training_goalie_profile_selection_screen.update_profiles()
+        elif curr_widget_class_name == "TrainingDrillProfileSelectionScreen":
+            self.training_drill_profile_selection_screen.update_profiles()
+        elif curr_widget_class_name == "TrainingGoalCalibrationScreen":
+            self.training_goal_calibration_screen.update_lax_goal_pic()
+
     def home_screen_flows(self):
         # Home Screen Flows
         self.home_screen.training_button.clicked.connect(
@@ -135,13 +149,13 @@ class MainWindow(QMainWindow):
                 self.training_goalie_profile_selection_screen)
         )
         self.training_screen.load_drill_profile_button.clicked.connect(
-            self.only_training_drill_profile_profile_selection_screen_setup
+            self.helper_only_training_drill_profile_profile_selection_screen_setup
         )
         self.training_screen.manual_session_button.clicked.connect(
-            self.manual_session_training_number_of_balls_selection_screen_setup
+            self.helper_manual_session_training_number_of_balls_selection_screen_setup
         )
 
-    def manual_session_training_number_of_balls_selection_screen_setup(self):
+    def helper_manual_session_training_number_of_balls_selection_screen_setup(self):
         self.manual_session = True
         prev_screen = "training_screen"
 
@@ -174,7 +188,7 @@ class MainWindow(QMainWindow):
                 self.training_session_recording_check_screen)
         )
 
-    def only_training_drill_profile_profile_selection_screen_setup(self):
+    def helper_only_training_drill_profile_profile_selection_screen_setup(self):
         self.manual_session = False
 
         self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen()
@@ -232,9 +246,9 @@ class MainWindow(QMainWindow):
                 lambda: self.main_widget.setCurrentWidget(self.training_goalie_profile_selection_screen))
 
         self.training_drill_profile_selection_screen.next_page_button.clicked.connect(
-            lambda: self.automated_session_training_number_of_balls_selection_screen_setup(self.training_drill_profile_selection_screen.get_selected_drill_profile()))
+            lambda: self.helper_automated_session_training_number_of_balls_selection_screen_setup(self.training_drill_profile_selection_screen.get_selected_drill_profile()))
 
-    def automated_session_training_number_of_balls_selection_screen_setup(self,  drill_name):
+    def helper_automated_session_training_number_of_balls_selection_screen_setup(self,  drill_name):
         prev_screen = "training_drill_profile_choice_screen"
 
         self.training_number_of_balls_selection_screen = screen_training_number_of_balls_selection.TrainingNumberOfBallsSelectionScreen(

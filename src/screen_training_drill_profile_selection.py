@@ -31,7 +31,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         self.table_font = QFont()
         self.table_font.setPixelSize(int(sc.FONT_L[:2]))
 
-        screen_layout = QVBoxLayout()
+        self.screen_layout = QVBoxLayout()
 
         if selected_goalie_profile is None:
             self.toolbar = ToolbarComponent(
@@ -40,7 +40,7 @@ class TrainingDrillProfileSelectionScreen(QWidget):
             self.toolbar = ToolbarComponent(
                 self.window_title, "Back to Goalie\n Profile Select")
 
-        screen_layout.addWidget(self.toolbar)
+        self.screen_layout.addWidget(self.toolbar)
 
         screen_layout_row_one = QHBoxLayout()
 
@@ -51,20 +51,33 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         self.next_page_button = GenericButton("Next")
         self.next_page_button.setVisible(False)
         screen_layout_row_one.addWidget(self.next_page_button)
-        screen_layout.addLayout(screen_layout_row_one)
+        self.screen_layout.addLayout(screen_layout_row_one)
 
         self.create_table_header_view(
             table_title_name="Drill Profiles", header_clicked_action=self.unselect_table_header)
         self.table_header.resizeRowsToContents()
-        screen_layout.addWidget(self.table_header)
+        self.screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
         self.create_main_table_view(profile_dict_obj=self.drill_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
         self.main_table_view.resizeRowsToContents()
-        screen_layout.addWidget(self.main_table_view)
+        self.screen_layout.addWidget(self.main_table_view)
 
-        self.setLayout(screen_layout)
+        self.setLayout(self.screen_layout)
+
+    def update_profiles(self):
+        """Refreshes the profiles on the screen to show to the user
+        """
+        self.screen_layout.removeWidget(self.main_table_view)
+
+        self.drill_profiles = self.profiler.get_profiles()
+
+        # Create the main table and add to the layout
+        self.create_main_table_view(profile_dict_obj=self.drill_profiles,
+                                    table_clicked_action=self.choose_main_table_click_action)
+        self.main_table_view.resizeRowsToContents()
+        self.screen_layout.addWidget(self.main_table_view)
 
     def create_table_header_view(self, table_title_name, header_clicked_action):
         """Creates a table header for the table below it

@@ -14,7 +14,7 @@ from component_toolbar import ToolbarComponent
 from window_test import TestWindow
 
 
-class TrainingGoalCalibration(QWidget):
+class TrainingGoalCalibrationScreen(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -36,16 +36,14 @@ class TrainingGoalCalibration(QWidget):
         self.lax_goal_label = QLabel()
         screen_layout.addWidget(self.lax_goal_label)
         # NOTE: This will change to temp_training_lax_goal.png
-        lax_goal_img_location = str(
-            Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
+        self.lax_goal_img_location = str(
+            # Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
+            Path.home()) + '/Developer/ball_e_gui/src/images/temp_training_lax_goal.png'
 
-        pixmap_object = QPixmap()
-        pixmap_object.load(lax_goal_img_location)
-
-        self.scaled_pixmap_obj = pixmap_object.scaled(pixmap_object.width()-300,
-                                                      pixmap_object.height()-300)
+        self.pixmap_object = QPixmap()
+        self.pixmap_object.load(self.lax_goal_img_location)
         self.lax_goal_label.mousePressEvent = self.draw_user_input
-        self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
+        self.lax_goal_label.setPixmap(self.pixmap_object)
 
         self.button_layout = QHBoxLayout()
         self.reset_button = GenericButton("Reset")
@@ -66,22 +64,25 @@ class TrainingGoalCalibration(QWidget):
 
         self.setLayout(screen_layout)
 
+    def update_lax_goal_pic(self):
+        self.pixmap_object = QPixmap()
+        self.pixmap_object.load(self.lax_goal_img_location)
+        self.lax_goal_label.mousePressEvent = self.draw_user_input
+        self.lax_goal_label.setPixmap(self.pixmap_object)
+
     def reset_lines(self):
         # Reset click counter
         self.click_counter = 0
 
         # Clear the image
         # NOTE: This will change to temp_training_lax_goal.png
-        lax_goal_img_location = str(
-            Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
+        self.lax_goal_img_location = str(
+            Path.home()) + '/Developer/ball_e_gui/src/images/temp_training_lax_goal.png'
 
-        pixmap_object = QPixmap()
-        pixmap_object.load(lax_goal_img_location)
-
-        self.scaled_pixmap_obj = pixmap_object.scaled(pixmap_object.width()-300,
-                                                      pixmap_object.height()-300)
+        self.pixmap_object = QPixmap()
+        self.pixmap_object.load(self.lax_goal_img_location)
         self.lax_goal_label.mousePressEvent = self.draw_user_input
-        self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
+        self.lax_goal_label.setPixmap(self.pixmap_object)
 
         self.reset_button.setVisible(False)
         self.next_page_button.setVisible(False)
@@ -96,7 +97,7 @@ class TrainingGoalCalibration(QWidget):
         if self.click_counter < 4:
             self.click_counter += 1
 
-            painter_obj = QPainter(self.scaled_pixmap_obj)
+            painter_obj = QPainter(self.pixmap_object)
             painter_obj.setPen(QPen(Qt.green, 12, Qt.SolidLine))
             painter_obj.setBrush(QBrush(Qt.green, Qt.SolidPattern))
 
@@ -104,7 +105,7 @@ class TrainingGoalCalibration(QWidget):
 
             painter_obj.end()
 
-            self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
+            self.lax_goal_label.setPixmap(self.pixmap_object)
 
             if self.click_counter == 1:
                 self.top_left_coord = (x_coord, y_coord)
@@ -125,7 +126,7 @@ class TrainingGoalCalibration(QWidget):
 
     def draw_lines(self):
 
-        painter_obj = QPainter(self.scaled_pixmap_obj)
+        painter_obj = QPainter(self.pixmap_object)
         painter_obj.setPen(QPen(Qt.green, 12, Qt.SolidLine))
 
         # Draw the perimeter
@@ -177,7 +178,7 @@ class TrainingGoalCalibration(QWidget):
 
         painter_obj.end()
 
-        self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
+        self.lax_goal_label.setPixmap(self.pixmap_object)
 
     def get_window_title(self):
         return self.window_title
@@ -185,7 +186,7 @@ class TrainingGoalCalibration(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    win = TestWindow(TrainingGoalCalibration())
+    win = TestWindow(TrainingGoalCalibrationScreen())
     win.show()
     sys.exit(app.exec_())
 

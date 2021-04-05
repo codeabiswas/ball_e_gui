@@ -57,13 +57,11 @@ class GoalieProfilesScreen(QWidget):
         self.create_table_header_view(
             table_title_name="Goalie Profiles",
             header_clicked_action=self.create_new_goalie_profile_modal)
-        self.table_header.resizeRowsToContents()
         self.screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
         self.create_main_table_view(profile_dict_obj=self.goalie_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
-        self.main_table_view.resizeRowsToContents()
         self.screen_layout.addWidget(self.main_table_view)
 
         # Set the screen layout
@@ -128,6 +126,8 @@ class GoalieProfilesScreen(QWidget):
         main_table_hor_head.setSectionResizeMode(
             1, QHeaderView.ResizeToContents)
 
+        self.main_table_view.resizeRowsToContents()
+
     def create_table_header_view(self, table_title_name, header_clicked_action):
         """Creates a table header for the table below it
 
@@ -180,6 +180,7 @@ class GoalieProfilesScreen(QWidget):
         )
         self.table_header.setFixedHeight(
             int(self.table_header.sizeHint().height()/2))
+        self.table_header.resizeRowsToContents()
 
     def get_goalie_profiles_info(self):
         """Updates the backend with goalie profile info
@@ -309,6 +310,7 @@ class GoalieProfilesScreen(QWidget):
             self.main_table_view.setItem(
                 last_row_num, 1, delete_row_widget)
 
+            self.main_table_view.resizeRowsToContents()
             # Update the goalie profiles instance
             self.get_goalie_profiles_info()
 
@@ -348,20 +350,6 @@ class GoalieProfilesScreen(QWidget):
         modal_layout = QVBoxLayout()
 
         table_view = QTableWidget()
-        table_view.verticalScrollBar().setStyleSheet(
-            "QScrollBar:vertical { width: 100px; }"
-        )
-        # table_view_scrollbar = self.main_table_view.verticalScrollBar()
-        # table_view_scrollbar.setFixedWidth(100)
-        # table_view.setVerticalScrollBar(
-        #     table_view_scrollbar)
-
-        # self.main_table_view.verticalScrollBar().setStyleSheet(
-        #     """
-
-        #     width: 30px;
-        #     """
-        # )
         table_view.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         goalie_info = self.profiler.get_profile_info(goalie_profile_path)
 

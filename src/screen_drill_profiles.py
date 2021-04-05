@@ -67,13 +67,11 @@ class DrillProfilesScreen(QWidget):
         self.create_table_header_view(
             table_title_name="Drill Profiles",
             header_clicked_action=self.create_new_drill_profile_modal_page_one)
-        self.table_header.resizeRowsToContents()
         self.screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
         self.create_main_table_view(profile_dict_obj=self.drill_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
-        self.main_table_view.resizeRowsToContents()
         self.screen_layout.addWidget(self.main_table_view)
 
         # Set the screen layout
@@ -136,6 +134,7 @@ class DrillProfilesScreen(QWidget):
         # Resize the right column to wrap around its contents
         main_table_hor_head.setSectionResizeMode(
             1, QHeaderView.ResizeToContents)
+        self.main_table_view.resizeRowsToContents()
 
     def create_table_header_view(self, table_title_name, header_clicked_action):
         """Creates a table header for the table below it
@@ -185,6 +184,7 @@ class DrillProfilesScreen(QWidget):
             1, QHeaderView.ResizeToContents)
         self.table_header.setFixedHeight(
             int(self.table_header.sizeHint().height()/2))
+        self.table_header.resizeRowsToContents()
 
     def get_drill_profiles_info(self):
         """Updates the backend with drill profile info
@@ -282,6 +282,7 @@ class DrillProfilesScreen(QWidget):
             self.main_table_view.setItem(
                 last_row_num, 1, delete_row_widget)
 
+            self.main_table_view.resizeRowsToContents()
             # Update the drill profiles instance
             self.get_drill_profiles_info()
 
@@ -461,7 +462,7 @@ class DrillProfilesScreen(QWidget):
         create_new_page_two_row_one_layout.addWidget(num_balls_input)
         # Dropdown for the Rate of Fire
         create_new_page_two_row_two_layout.addWidget(
-            ProfileLabel("Rate of Fire: "))
+            ProfileLabel("Rate of Fire (s/ball): "))
         rate_of_fire_input = Dropdown()
         for rate_of_fire in range(sc.MIN_ROF, sc.MAX_ROF+1):
             rate_of_fire_input.addItem(str(rate_of_fire))
