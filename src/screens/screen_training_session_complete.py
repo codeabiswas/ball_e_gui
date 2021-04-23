@@ -1,19 +1,21 @@
-import sys
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
-                             QMainWindow, QPushButton, QSizePolicy,
-                             QTableWidget, QTableWidgetItem, QVBoxLayout,
-                             QWidget)
+    from component_labels import ProfileLabel
+    from component_toolbar import ToolbarComponent
+    from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
 
-import style_constants as sc
-from component_button import GenericButton
-from component_labels import ProfileLabel
-from component_toolbar import ToolbarComponent
-from helper_profiler import Profiler
-from window_test import TestWindow
+    from PyQt5.QtWidgets import QApplication, QVBoxLayout, QWidget
 
 
 class TrainingSessionCompleteScreen(QWidget):

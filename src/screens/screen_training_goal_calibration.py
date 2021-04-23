@@ -1,17 +1,24 @@
-import sys
-from pathlib import Path
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QBrush, QPainter, QPen, QPixmap
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-                             QPushButton, QSizePolicy, QVBoxLayout, QWidget)
+    from component_button import GenericButton
+    from component_labels import ProfileLabel
+    from component_toolbar import ToolbarComponent
+    from window_test import TestWindow
 
-import style_constants as sc
-from component_button import GenericButton
-from component_labels import ProfileLabel
-from component_toolbar import ToolbarComponent
-from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
+
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtGui import QBrush, QPainter, QPen, QPixmap
+    from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel,
+                                 QVBoxLayout, QWidget)
 
 
 class TrainingGoalCalibrationScreen(QWidget):

@@ -1,31 +1,42 @@
-import sys
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
-                             QMainWindow, QPushButton, QSizePolicy,
-                             QTableWidget, QTableWidgetItem, QVBoxLayout,
-                             QWidget)
+    import style_constants as sc
+    from component_button import GenericButton
+    from component_labels import ProfileLabel
+    from component_toolbar import ToolbarComponent
+    from helper_profiler import Profiler
+    from window_test import TestWindow
 
-import style_constants as sc
-from component_button import GenericButton
-from component_labels import ProfileLabel
-from component_toolbar import ToolbarComponent
-from helper_profiler import Profiler
-from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
+
+    from PyQt5 import QtWidgets
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtGui import QFont
+    from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QHeaderView,
+                                 QTableWidget, QTableWidgetItem, QVBoxLayout,
+                                 QWidget)
 
 
-class TrainingGoalieProfileSelectionScreen(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class TrainingDrillProfileSelectionScreen(QWidget):
+    def __init__(self, selected_goalie_profile=None):
+        super().__init__()
 
-        self.window_title = "Goalie Profile Selection"
+        self.window_title = "Drill Profile Selection"
 
-        self.profiler = Profiler('goalie_profiles')
-        self.goalie_profiles = self.profiler.get_profiles()
+        self.profiler = Profiler('drill_profiles')
+        self.drill_profiles = self.profiler.get_profiles()
 
-        self.selected_goalie_profile = None
+        self.selected_drill_profile = None
 
         # This font will be used for all table related purposes
         self.table_font = QFont()
@@ -33,15 +44,20 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
 
         self.screen_layout = QVBoxLayout()
 
-        self.toolbar = ToolbarComponent(self.window_title, "Back to Training")
+        if selected_goalie_profile is None:
+            self.toolbar = ToolbarComponent(
+                self.window_title, "Back to Training")
+        else:
+            self.toolbar = ToolbarComponent(
+                self.window_title, "Back to Goalie\n Profile Select")
 
         self.screen_layout.addWidget(self.toolbar)
 
         screen_layout_row_one = QHBoxLayout()
 
-        self.goalie_profile_selection_label = ProfileLabel(
-            "Please Select a Goalie Profile to Continue")
-        screen_layout_row_one.addWidget(self.goalie_profile_selection_label)
+        self.drill_profile_selection_label = ProfileLabel(
+            "Please Select a Drill Profile to Continue")
+        screen_layout_row_one.addWidget(self.drill_profile_selection_label)
 
         self.next_page_button = GenericButton("Next")
         self.next_page_button.setVisible(False)
@@ -49,12 +65,12 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
         self.screen_layout.addLayout(screen_layout_row_one)
 
         self.create_table_header_view(
-            table_title_name="Goalie Profiles", header_clicked_action=self.unselect_table_header)
+            table_title_name="Drill Profiles", header_clicked_action=self.unselect_table_header)
         self.table_header.resizeRowsToContents()
         self.screen_layout.addWidget(self.table_header)
 
         # Create the main table and add to the layout
-        self.create_main_table_view(profile_dict_obj=self.goalie_profiles,
+        self.create_main_table_view(profile_dict_obj=self.drill_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
         self.main_table_view.resizeRowsToContents()
         self.screen_layout.addWidget(self.main_table_view)
@@ -66,10 +82,10 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
         """
         self.screen_layout.removeWidget(self.main_table_view)
 
-        self.goalie_profiles = self.profiler.get_profiles()
+        self.drill_profiles = self.profiler.get_profiles()
 
         # Create the main table and add to the layout
-        self.create_main_table_view(profile_dict_obj=self.goalie_profiles,
+        self.create_main_table_view(profile_dict_obj=self.drill_profiles,
                                     table_clicked_action=self.choose_main_table_click_action)
         self.main_table_view.resizeRowsToContents()
         self.screen_layout.addWidget(self.main_table_view)
@@ -81,7 +97,7 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
             table_title_name (str): Table's title
         """
 
-        # Create the table object that acts as the "header" for the main goalie profile table view
+        # Create the table object that acts as the "header" for the main Drill profile table view
         self.table_header = QTableWidget()
         # Do not allow the user to edit the content of the table
         self.table_header.setEditTriggers(
@@ -109,10 +125,10 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
 
         # Size the header appropriately
         header_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
-        self.table_header.setSizePolicy(
-            QSizePolicy.Preferred,
-            QSizePolicy.Fixed
-        )
+        # self.table_header.setSizePolicy(
+        #     QSizePolicy.Preferred,
+        #     QSizePolicy.Fixed
+        # )
         self.table_header.setFixedHeight(
             int(self.table_header.sizeHint().height()/2))
 
@@ -163,25 +179,28 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
         main_table_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
 
     def choose_main_table_click_action(self, item):
-        goalie_name = self.main_table_view.item(item.row(), 0).text()
+        drill_name = self.main_table_view.item(item.row(), 0).text()
 
-        self.goalie_profile_selection_label.setText("You have selected: {}".format(
-            goalie_name
+        self.drill_profile_selection_label.setText("You have selected: {}".format(
+            drill_name
         ))
         self.next_page_button.setVisible(True)
 
-        self.selected_goalie_profile = goalie_name.replace(' ', '_').lower()
+        self.selected_drill_profile = drill_name.replace(' ', '_').lower()
 
     def reset_screen(self):
         # Unselect the currently picked cell
-        self.main_table_view.selectedItems()[
-            0].setSelected(False)
+        self.main_table_view.selectedItems()[0].setSelected(False)
 
-        self.goalie_profile_selection_label.setText(
-            "Please Select a Goalie Profile to Continue")
+        self.drill_profile_selection_label.setText(
+            "Please Select a Drill Profile to Continue")
 
-    def get_selected_goalie_profile(self):
-        return self.selected_goalie_profile
+        self.selected_drill_profile = None
+
+        self.next_page_button.setVisible(False)
+
+    def get_selected_drill_profile(self):
+        return self.selected_drill_profile
 
     def get_window_title(self):
         return self.window_title
@@ -189,7 +208,7 @@ class TrainingGoalieProfileSelectionScreen(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    win = TestWindow(TrainingGoalieProfileSelectionScreen())
+    win = TestWindow(TrainingDrillProfileSelectionScreen())
     win.show()
     sys.exit(app.exec_())
 

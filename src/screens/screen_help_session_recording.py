@@ -1,36 +1,34 @@
-import sys
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import (QApplication, QLabel, QListWidget,
-                             QListWidgetItem, QMessageBox, QPushButton,
-                             QSizePolicy, QVBoxLayout, QWidget)
-
-import helper_doc_reader as hdr
-from component_labels import ProfileLabel
-from component_modal import Modal
-from component_toolbar import ToolbarComponent
-from window_test import TestWindow
-
-
-class ListItem(QListWidgetItem):
-    def __init__(self, text):
-        super().__init__()
-        self.setText(text)
-        font = QFont()
-        font.setPixelSize(22)
-        self.setFont(font)
+    import helper_doc_reader as hdr
+    from component_labels import ProfileLabel
+    from component_list_item import ListItem
+    from component_modal import Modal
+    from component_toolbar import ToolbarComponent
+    from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
+    from PyQt5.QtWidgets import QApplication, QListWidget, QVBoxLayout, QWidget
 
 
-class CalibrationHelpScreen(QWidget):
+class SessionRecordingHelpScreen(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.window_title = "Help: Calibration"
+        self.window_title = "Help: Session Recording"
 
         # Get the docs for this section
-        doc_reader = hdr.DocReader('calibration/calibration_doc.md')
+        doc_reader = hdr.DocReader(
+            'session_recording/session_recording_doc.md')
         self.docs = doc_reader.get_doc()
 
         screen_layout = QVBoxLayout()
@@ -71,7 +69,7 @@ class CalibrationHelpScreen(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    win = TestWindow(CalibrationHelpScreen())
+    win = TestWindow(SessionRecordingHelpScreen())
     win.show()
     sys.exit(app.exec_())
 

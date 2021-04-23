@@ -1,27 +1,32 @@
-import sys
-
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow
-
-import screen_drill_profiles
-import screen_goalie_profiles
-import screen_help
-import screen_help_calibration
-import screen_help_profiles
-import screen_help_session_recording
-import screen_help_training
-import screen_home
-import screen_profiles
-import screen_training
-import screen_training_automated_session
-import screen_training_drill_profile_selection
-import screen_training_goal_calibration
-import screen_training_goal_calibration_take_photo
-import screen_training_goalie_profile_selection
-import screen_training_manual_session
-import screen_training_number_of_balls_selection
-import screen_training_session_recording_check
+try:
+    import sys
+    from pathlib import Path
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/screens".format(Path.home()))
+    import screen_drill_profiles
+    import screen_goalie_profiles
+    import screen_help
+    import screen_help_calibration
+    import screen_help_profiles
+    import screen_help_session_recording
+    import screen_help_training
+    import screen_home
+    import screen_profiles
+    import screen_training
+    import screen_training_automated_session
+    import screen_training_drill_profile_selection
+    import screen_training_goal_calibration
+    import screen_training_goal_calibration_take_photo
+    import screen_training_goalie_profile_selection
+    import screen_training_manual_session
+    import screen_training_number_of_balls_selection
+    import screen_training_session_recording_check
+except ImportError:
+    print("Screen imports failed")
+finally:
+    from PyQt5 import QtWidgets
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication, QMainWindow
 
 
 class MainWindow(QMainWindow):

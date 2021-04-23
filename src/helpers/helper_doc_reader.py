@@ -6,10 +6,11 @@ class DocReader():
         self.filepath = filepath
 
     def get_doc(self):
-        path = Path(__file__).parent / "../docs/{}".format(self.filepath)
+        path = "{source}/Developer/ball_e_gui/docs/{doc_path}".format(
+            source=Path.home(), doc_path=self.filepath)
         qn_list = list()
         ans_list = list()
-        with path.open() as f:
+        with open(path) as f:
             contents = f.read().splitlines()
 
         for content in contents:

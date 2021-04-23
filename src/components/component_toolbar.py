@@ -1,12 +1,16 @@
-import sys
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
 
-from PyQt5 import QtGui
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QHBoxLayout, QLabel,
-                             QLayout, QMainWindow, QPushButton, QSizePolicy,
-                             QVBoxLayout, QWidget)
-
-import style_constants as sc
+    import style_constants as sc
+except ImportError:
+    print("Imports failed")
+finally:
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
+                                 QWidget)
 
 
 class ToolbarButton(QPushButton):

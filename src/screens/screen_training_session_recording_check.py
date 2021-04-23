@@ -1,33 +1,24 @@
-import csv
-import pathlib
-import shutil
-import sys
-import threading
-import time
-from os import RTLD_NOW
-from pathlib import Path
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-import pyudev
-from PyQt5 import QtGui, QtWidgets
-from PyQt5.QtCore import QFileSystemWatcher, Qt, left, qChecksum, right
-from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QPixmap
-from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
-                             QDesktopWidget, QDialog, QHBoxLayout, QHeaderView,
-                             QLabel, QLineEdit, QListWidget, QListWidgetItem,
-                             QPushButton, QSizePolicy, QStackedLayout,
-                             QStackedWidget, QTableWidget, QTableWidgetItem,
-                             QTabWidget, QVBoxLayout, QWidget)
-from pyudev.pyqt5 import MonitorObserver
-
-import style_constants as sc
-from component_button import (GenericButton, ProfileCreateButton,
-                              ProfileDeleteButton)
-from component_drill_creation_widget import DrillCreationWidget
-from component_labels import ProfileLabel, TableHeaderLabel
-from component_modal import Modal
-from component_toolbar import ToolbarComponent
-from helper_profiler import Profiler
-from window_test import TestWindow
+    import style_constants as sc
+    from component_button import GenericButton
+    from component_labels import ProfileLabel
+    from component_toolbar import ToolbarComponent
+    from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
+    import pyudev
+    from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
+    from pyudev.pyqt5 import MonitorObserver
 
 
 class TrainingSessionRecordingCheckScreen(QWidget):

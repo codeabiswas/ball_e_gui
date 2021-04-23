@@ -1,27 +1,33 @@
-import pathlib
-import shutil
-import sys
-from os import RTLD_NOW
-from pathlib import Path
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-from PyQt5 import QtGui, QtWidgets
-from PyQt5.QtCore import Qt, qChecksum
-from PyQt5.QtGui import QColor, QFont
-from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDesktopWidget,
-                             QDialog, QHBoxLayout, QHeaderView, QLabel,
-                             QLineEdit, QListWidget, QListWidgetItem,
-                             QPushButton, QSizePolicy, QTableWidget,
-                             QTableWidgetItem, QVBoxLayout, QWidget)
+    import style_constants as sc
+    from component_button import GenericButton
+    from component_labels import ProfileLabel
+    from component_lineedit import LineEdit
+    from component_modal import Modal
+    from component_toolbar import ToolbarComponent
+    from helper_profiler import Profiler
+    from window_test import TestWindow
 
-import style_constants as sc
-from component_button import (GenericButton, ProfileCreateButton,
-                              ProfileDeleteButton)
-from component_labels import ProfileLabel, TableHeaderLabel
-from component_lineedit import LineEdit
-from component_modal import Modal
-from component_toolbar import ToolbarComponent
-from helper_profiler import Profiler
-from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
+    import shutil
+
+    from PyQt5 import QtWidgets
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtGui import QColor, QFont
+    from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QHeaderView,
+                                 QSizePolicy, QTableWidget, QTableWidgetItem,
+                                 QVBoxLayout, QWidget)
 
 
 class GoalieProfilesScreen(QWidget):

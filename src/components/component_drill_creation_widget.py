@@ -1,28 +1,24 @@
-import csv
-import pathlib
-import shutil
-import sys
-from os import RTLD_NOW
-from pathlib import Path
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
 
-from PyQt5 import QtGui, QtWidgets
-from PyQt5.QtCore import Qt, left, qChecksum, right
-from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QPixmap
-from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
-                             QDesktopWidget, QDialog, QHBoxLayout, QHeaderView,
-                             QLabel, QLineEdit, QListWidget, QListWidgetItem,
-                             QPushButton, QSizePolicy, QStackedLayout,
-                             QStackedWidget, QTableWidget, QTableWidgetItem,
-                             QTabWidget, QVBoxLayout, QWidget)
+    import style_constants as sc
+    from helper_profiler import Profiler
 
-import style_constants as sc
-from component_button import ProfileCreateButton, ProfileDeleteButton
-from component_dropdown import Dropdown
-from component_labels import ProfileLabel, TableHeaderLabel
-from component_modal import Modal
-from component_toolbar import ToolbarComponent
-from helper_profiler import Profiler
-from window_test import TestWindow
+    from component_dropdown import Dropdown
+    from component_labels import ProfileLabel
+except ImportError:
+    print("Imports failed")
+finally:
+    import csv
+
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtGui import QPainter, QPen, QPixmap
+    from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 
 class DrillCreationWidget(QWidget):
@@ -40,7 +36,7 @@ class DrillCreationWidget(QWidget):
         self.shot_location_label = ProfileLabel("Shot Location: Center Middle")
         self.lax_goal_label = QLabel()
         lax_goal_img_location = str(
-            Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
+            pathlib.Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
         pixmap_object = QPixmap()
         pixmap_object.load(lax_goal_img_location)
         self.scaled_pixmap_obj = pixmap_object.scaled(pixmap_object.width()-300,

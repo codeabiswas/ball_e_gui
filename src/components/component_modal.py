@@ -1,12 +1,18 @@
-import sys
-from typing import Generic
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QDesktopWidget, QDialog, QHBoxLayout, QLabel,
-                             QPushButton, QVBoxLayout, QWidget)
+    import style_constants as sc
 
-import style_constants as sc
-from component_button import GenericButton
+    from component_button import GenericButton
+except ImportError:
+    print("Imports failed")
+finally:
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import (QDialog, QHBoxLayout, QLabel, QVBoxLayout,
+                                 QWidget)
 
 
 class Modal(QDialog):

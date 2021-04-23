@@ -1,15 +1,20 @@
-import sys
-from pathlib import Path
+try:
+    import pathlib
+    import sys
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/helpers".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
 
-from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QLabel, QMainWindow,
-                             QPushButton, QScrollArea, QSizePolicy,
-                             QVBoxLayout, QWidget)
-
-from component_button import FullPageButton, GenericButton
-from component_toolbar import ToolbarComponent
-from window_test import TestWindow
+    from component_button import FullPageButton
+    from component_toolbar import ToolbarComponent
+    from window_test import TestWindow
+except ImportError:
+    print("Imports failed")
+finally:
+    from PyQt5.QtWidgets import QApplication, QVBoxLayout, QWidget
 
 
 class HelpScreen(QWidget):
