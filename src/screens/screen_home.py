@@ -12,6 +12,7 @@ try:
 except ImportError:
     print("Imports failed")
 finally:
+    import os
 
     from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
@@ -51,7 +52,8 @@ class HomeScreen(QWidget):
         self.setLayout(home_screen_layout)
 
     def OnClickPowerOffButton(self):
-        sys.exit()
+        os.system("shutdown /s /t 0")
+        # sys.exit()
 
     def get_window_title(self):
         return self.window_title

@@ -5,10 +5,13 @@ try:
         "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
     sys.path.append(
         "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_motor_control/src".format(pathlib.Path.home()))
 
     from component_button import FullPageButton
     from component_labels import ProfileLabel
     from component_toolbar import ToolbarComponent
+    from drill_session_handler import DrillSessionHandler
     from window_test import TestWindow
 
 except ImportError:
@@ -25,7 +28,7 @@ class TrainingAutomatedSessionScreen(QWidget):
         QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
     """
 
-    def __init__(self, drill_name, total_ball_num):
+    def __init__(self, drill_name, total_ball_num, distance_from_goal,  goalie_name=None):
         """Widget Initialization
         """
         super().__init__()
@@ -33,8 +36,14 @@ class TrainingAutomatedSessionScreen(QWidget):
         self.window_title = "Automated Training Session"
 
         self.drill_name = drill_name
+        self.distance_from_goal = distance_from_goal
+        self.goalie_name = goalie_name
         self.curr_ball_num = 1
         self.total_ball_num = total_ball_num
+
+        # Object which controls a drill session
+        self.drill_handler = DrillSessionHandler(
+            distance_from_goal=self.distance_from_goal, drill_name=self.drill_name, goalie_name=self.goalie_name)
 
         # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
@@ -59,8 +68,8 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         self.start_button = FullPageButton("Start")
         self.button_layout.addWidget(self.start_button)
-        self.pause_button = FullPageButton("Pause")
-        self.button_layout.addWidget(self.pause_button)
+        # self.pause_button = FullPageButton("Pause")
+        # self.button_layout.addWidget(self.pause_button)
         self.stop_button = FullPageButton("Stop")
         self.button_layout.addWidget(self.stop_button)
 
@@ -70,6 +79,17 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         # Set the screen layout
         self.setLayout(self.screen_layout)
+
+    def on_click_start_button(self):
+
+        self.start_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+        self.drill_handler.start_drill()
+        self.drill_handler.run_automated_drill()
+
+    def on_click_stop_button(self):
+
+        self.drill_handler.stop_drill()
 
     def get_window_title(self):
         """Helper function to return this window's title

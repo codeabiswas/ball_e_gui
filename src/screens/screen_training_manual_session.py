@@ -5,15 +5,20 @@ try:
         "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
     sys.path.append(
         "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_motor_control/src".format(pathlib.Path.home()))
 
+    import style_constants as sc
     from component_button import FullPageButton
+    from component_dropdown import Dropdown
     from component_labels import ProfileLabel
     from component_toolbar import ToolbarComponent
+    from drill_session_handler import DrillSessionHandler
     from window_test import TestWindow
 except ImportError:
     print("Imports failed")
 finally:
-    from PyQt5.QtCore import Qt
+    from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
     from PyQt5.QtGui import QPainter, QPen, QPixmap
     from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel,
                                  QVBoxLayout, QWidget)
@@ -26,7 +31,7 @@ class TrainingManualSessionScreen(QWidget):
         QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
     """
 
-    def __init__(self, total_ball_num):
+    def __init__(self, total_ball_num, distance_from_goal):
         """Widget Initialization
         """
         super().__init__()
@@ -35,6 +40,18 @@ class TrainingManualSessionScreen(QWidget):
 
         self.curr_ball_num = 1
         self.total_ball_num = total_ball_num
+        self.distance_from_goal = distance_from_goal
+        # Default shot location
+        self.shot_loc = "CM"
+        # Default speed (in MPH)
+        self.selected_speed = 30
+
+        # The emitter that lets PyQt know when training is complete
+        self.training_complete_emitter = pyqtSignal(bool)
+
+        # Object which controls a drill session
+        self.drill_handler = DrillSessionHandler(
+            distance_from_goal=self.distance_from_goal)
 
         # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
@@ -60,23 +77,43 @@ class TrainingManualSessionScreen(QWidget):
 
         self.row_layout.addLayout(self.column_layout)
 
-        self.shoot_button = FullPageButton("Shoot")
-        self.shoot_button.clicked.connect(self.shoot_button_clicked)
-        self.row_layout.addWidget(self.shoot_button)
+        self.speed_sel_layout = QVBoxLayout()
+
+        speed_selection_label = ProfileLabel("Ball Speed")
+        speed_selection_dropdown = Dropdown()
+        for ball_count in range(sc.MIN_BALL_SPEED, sc.MAX_BALL_SPEED+1, 5):
+            speed_selection_dropdown.addItem(str(ball_count))
+        speed_selection_dropdown.currentIndexChanged.connect(
+            lambda: self.set_speed_selection(speed_selection_dropdown.currentText()))
+
+        self.speed_sel_layout.addWidget(speed_selection_label)
+        self.speed_sel_layout.addWidget(speed_selection_dropdown)
+
+        self.row_layout.addLayout(self.speed_sel_layout)
+
+        self.start_shoot_button = FullPageButton("Start")
+        # If this button shows up as "Start", then first we want to enable the motors. Then, we want to turn this button's text to "Shoot" so that the user can shoot balls.
+        self.start_button = True
+        self.start_shoot_button.clicked.connect(
+            self.start_shoot_button_clicked)
+        self.row_layout.addWidget(self.start_shoot_button)
 
         self.screen_layout.addLayout(self.row_layout)
 
         # Set the screen layout
         self.setLayout(self.screen_layout)
 
+    def set_speed_selection(self, selected_speed):
+        self.selected_speed = selected_speed
+
     def lax_goal_image_setup(self):
 
         lax_goal_img_location = str(
-            Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
+            pathlib.Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
         pixmap_object = QPixmap()
         pixmap_object.load(lax_goal_img_location)
-        self.scaled_pixmap_obj = pixmap_object.scaled(pixmap_object.width()-300,
-                                                      pixmap_object.height()-300)
+        self.scaled_pixmap_obj = pixmap_object.scaled(
+            pixmap_object.width()-300, pixmap_object.height()-300)
         self.lax_goal_label.mousePressEvent = self.show_shot_location
 
         painter_obj = QPainter(self.scaled_pixmap_obj)
@@ -143,37 +180,56 @@ class TrainingManualSessionScreen(QWidget):
             middle_flag = True
 
         if top_flag and left_flag:
+            self.shot_loc = "TL"
             self.shot_location_label.setText(
                 "Shot Location: Top Left")
         elif top_flag and right_flag:
+            self.shot_loc = "TR"
             self.shot_location_label.setText(
                 "Shot Location: Top Right")
         elif top_flag and middle_flag:
+            self.shot_loc = "TM"
             self.shot_location_label.setText(
                 "Shot Location: Top Middle")
         elif center_flag and left_flag:
+            self.shot_loc = "CL"
             self.shot_location_label.setText(
                 "Shot Location: Center Left")
         elif center_flag and right_flag:
+            self.shot_loc = "CR"
             self.shot_location_label.setText(
                 "Shot Location: Center Right")
         elif center_flag and middle_flag:
+            self.shot_loc = "CM"
             self.shot_location_label.setText(
                 "Shot Location: Center Middle")
         elif bottom_flag and left_flag:
+            self.shot_loc = "BL"
             self.shot_location_label.setText(
                 "Shot Location: Bottom Left")
         elif bottom_flag and right_flag:
+            self.shot_loc = "BR"
             self.shot_location_label.setText(
                 "Shot Location: Bottom Right")
         elif bottom_flag and middle_flag:
+            self.shot_loc = "BM"
             self.shot_location_label.setText(
                 "Shot Location: Bottom Middle")
 
-    def shoot_button_clicked(self):
-        self.curr_ball_num += 1
-        self.ball_number_label.setText("Ball {} out of {}".format(
-            self.curr_ball_num, self.total_ball_num))
+    def start_shoot_button_clicked(self):
+        if self.start_button:
+            self.drill_handler.start_drill()
+            self.start_shoot_button.setText("Shoot")
+            self.start_button = False
+        else:
+
+            self.drill_handler.run_manual_drill(
+                self.shot_loc, self.selected_speed)
+            self.curr_ball_num += 1
+            if self.curr_ball_num > self.total_ball_num:
+                self.training_complete_emitter.emit(True)
+            self.ball_number_label.setText("Ball {} out of {}".format(
+                self.curr_ball_num, self.total_ball_num))
 
     def get_window_title(self):
         """Helper function to return this window's title

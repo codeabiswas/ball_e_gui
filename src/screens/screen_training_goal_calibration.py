@@ -5,10 +5,13 @@ try:
         "{}/Developer/ball_e_gui/src/components".format(pathlib.Path.home()))
     sys.path.append(
         "{}/Developer/ball_e_gui/src/windows".format(pathlib.Path.home()))
+    sys.path.append(
+        "{}/Developer/ball_e_image_processing/src".format(pathlib.Path.home()))
 
     from component_button import GenericButton
     from component_labels import ProfileLabel
     from component_toolbar import ToolbarComponent
+    from goal_distance_calculator import GoalDistanceCalculator
     from window_test import TestWindow
 
 except ImportError:
@@ -28,6 +31,9 @@ class TrainingGoalCalibrationScreen(QWidget):
         self.window_title = "Goal Calibration"
 
         self.click_counter = 0
+
+        # This object will keep track of what the distance of Ball-E from the goal is
+        self.goal_distance = None
 
         screen_layout = QVBoxLayout()
 
@@ -128,8 +134,17 @@ class TrainingGoalCalibrationScreen(QWidget):
                 self.reset_button.setVisible(True)
                 self.next_page_button.setVisible(True)
                 self.draw_lines()
+
+                # Accumulate all the points acquired from the user in a list
+                points_drawn = [self.top_left_coord, self.top_right_coord,
+                                self.bottom_right_coord, self.bottom_left_coord]
+                # Create distance from goal calculator object
+                goal_distance_calculator = GoalDistanceCalculator(points_drawn)
+                # Get the distance calculated in ft.
+                self.goal_distance = goal_distance_calculator.get_obj_distance()/12
+
                 self.info_label.setText(
-                    "These will be your bounds. If you would like to redo this, click on the Reset button")
+                    "Distance Calculated: {%.2f} ft.\nThese will be your bounds. If you would like to redo this, click on the Reset button".format(goal_distance))
 
     def draw_lines(self):
 
@@ -186,6 +201,9 @@ class TrainingGoalCalibrationScreen(QWidget):
         painter_obj.end()
 
         self.lax_goal_label.setPixmap(self.pixmap_object)
+
+    def get_goal_distance(self):
+        return self.goal_distance/12
 
     def get_window_title(self):
         return self.window_title

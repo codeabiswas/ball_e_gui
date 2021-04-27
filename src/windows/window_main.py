@@ -20,12 +20,13 @@ try:
     import screen_training_goalie_profile_selection
     import screen_training_manual_session
     import screen_training_number_of_balls_selection
+    import screen_training_session_complete
     import screen_training_session_recording_check
 except ImportError:
     print("Screen imports failed")
 finally:
     from PyQt5 import QtWidgets
-    from PyQt5.QtCore import Qt
+    from PyQt5.QtCore import Qt, pyqtSlot
     from PyQt5.QtWidgets import QApplication, QMainWindow
 
 
@@ -37,6 +38,8 @@ class MainWindow(QMainWindow):
 
         # Whether or not a Manual Session has been selected by user, defaults to False
         self.manual_session = False
+        # Whether or not an Automated Session using a Goalie Profile has been selected by user, defaults to False
+        self.automated_with_goalie_session = False
 
         # All screens setup
         self.home_screen = screen_home.HomeScreen()
@@ -48,6 +51,7 @@ class MainWindow(QMainWindow):
         self.training_session_recording_check_screen = screen_training_session_recording_check.TrainingSessionRecordingCheckScreen()
         self.training_goal_calibration_take_photo_screen = screen_training_goal_calibration_take_photo.TrainingGoalCalibrationTakePhotoScreen()
         self.training_goal_calibration_screen = screen_training_goal_calibration.TrainingGoalCalibrationScreen()
+        self.training_session_complete_screen = screen_training_session_complete.TrainingSessionCompleteScreen()
 
         self.profiles_screen = screen_profiles.ProfilesScreen()
         self.goalie_profiles_screen = screen_goalie_profiles.GoalieProfilesScreen()
@@ -79,6 +83,8 @@ class MainWindow(QMainWindow):
             self.training_goal_calibration_take_photo_screen)
         self.main_widget.addWidget(
             self.training_goal_calibration_screen)
+        self.main_widget.addWidget(
+            self.training_session_complete_screen)
 
         self.main_widget.addWidget(self.profiles_screen)
         self.main_widget.addWidget(self.goalie_profiles_screen)
@@ -103,6 +109,7 @@ class MainWindow(QMainWindow):
         self.training_session_recording_check_screen_flows()
         self.training_goal_calibration_take_photo_screen_flows()
         self.training_goal_calibration_screen_flows()
+        self.training_session_complete_screen_flows()
 
         # Profiles Screen Flows
         self.profiles_screen_flows()
@@ -128,11 +135,15 @@ class MainWindow(QMainWindow):
         curr_widget_class_name = curr_widget.__class__.__name__
 
         if curr_widget_class_name == "TrainingGoalieProfileSelectionScreen":
+            self.automated_with_goalie_session = True
             self.training_goalie_profile_selection_screen.update_profiles()
         elif curr_widget_class_name == "TrainingDrillProfileSelectionScreen":
             self.training_drill_profile_selection_screen.update_profiles()
         elif curr_widget_class_name == "TrainingGoalCalibrationScreen":
             self.training_goal_calibration_screen.update_lax_goal_pic()
+        elif curr_widget_class_name == "TrainingScreen":
+            self.manual_session = False
+            self.automated_with_goalie_session = False
 
     def home_screen_flows(self):
         # Home Screen Flows
@@ -281,13 +292,13 @@ class MainWindow(QMainWindow):
     def training_goal_calibration_take_photo_screen_flows(self):
         # Toolbar Flows
         self.training_goal_calibration_take_photo_screen.toolbar.back_to_home_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+            lambda: self.training_goal_calibration_take_photo_screen_closing_steps("home_screen"))
         self.training_goal_calibration_take_photo_screen.toolbar.prev_screen_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.training_session_recording_check_screen))
+            lambda: self.training_goal_calibration_take_photo_screen_closing_steps("prev_screen"))
 
         # Screen Flows
         self.training_goal_calibration_take_photo_screen.next_page_button.clicked.connect(
-            self.training_goal_calibration_take_photo_screen_closing_steps)
+            lambda: self.training_goal_calibration_take_photo_screen_closing_steps("next_screen"))
 
     def training_goal_calibration_take_photo_screen_startup_steps(self):
 
@@ -296,12 +307,19 @@ class MainWindow(QMainWindow):
 
         self.training_goal_calibration_take_photo_screen.start_camera()
 
-    def training_goal_calibration_take_photo_screen_closing_steps(self):
+    def training_goal_calibration_take_photo_screen_closing_steps(self, button_type):
 
         self.training_goal_calibration_take_photo_screen.cleanup_steps()
 
-        self.main_widget.setCurrentWidget(
-            self.training_goal_calibration_screen)
+        if button_type == "prev_screen":
+            self.main_widget.setCurrentWidget(
+                self.home_screen)
+        elif button_type == "home_screen":
+            self.main_widget.setCurrentWidget(
+                self.training_session_recording_check_screen)
+        elif button_type == "next_screen":
+            self.main_widget.setCurrentWidget(
+                self.training_goal_calibration_screen)
 
     def training_goal_calibration_screen_flows(self):
         # Toolbar Flows
@@ -317,19 +335,33 @@ class MainWindow(QMainWindow):
     def training_automated_or_manual_session_screen_setup(self):
         if self.manual_session:
             self.training_manual_session_screen = screen_training_manual_session.TrainingManualSessionScreen(
-                self.training_number_of_balls_selection_screen.get_session_ball_number()
+                total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(
+                ), distance_from_goal=self.training_goal_calibration_screen.get_goal_distance()
             )
+            self.training_manual_session_screen.training_complete_emitter.connect(
+                self.update_main_widget_to_training_session_complete_screen)
             self.training_manual_session_screen_flows()
             self.main_widget.addWidget(self.training_manual_session_screen)
             self.main_widget.setCurrentWidget(
                 self.training_manual_session_screen)
         else:
-            self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
-                self.training_drill_profile_selection_screen.get_selected_drill_profile(), self.training_number_of_balls_selection_screen.get_session_ball_number())
+            if self.automated_with_goalie_session:
+                self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
+                    drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_goal_calibration_screen.get_goal_distance(), goalie_name=self.training_goalie_profile_selection_screen.get_selected_goalie_profile())
+            else:
+                self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
+                    drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_goal_calibration_screen.get_goal_distance())
+            self.training_automated_session_screen.training_complete_emitter.connect(
+                self.update_main_widget_to_training_session_complete_screen)
             self.training_automated_session_screen_flows()
             self.main_widget.addWidget(self.training_automated_session_screen)
             self.main_widget.setCurrentWidget(
                 self.training_automated_session_screen)
+
+    @pyqtSlot(bool)
+    def update_main_widget_to_training_session_complete_screen(self, some_bool):
+        self.main_widget.setCurrentWidget(
+            self.training_session_complete_screen)
 
     def training_automated_session_screen_flows(self):
         # Toolbar Flows
@@ -344,6 +376,11 @@ class MainWindow(QMainWindow):
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
         self.training_manual_session_screen.toolbar.prev_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_screen))
+
+    def training_session_complete_screen_flows(self):
+        # Toolbar Flows
+        self.training_manual_session_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
 
     def profiles_screen_flows(self):
         # Toolbar Flows
