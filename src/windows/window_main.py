@@ -379,7 +379,7 @@ class MainWindow(QMainWindow):
 
     def training_session_complete_screen_flows(self):
         # Toolbar Flows
-        self.training_manual_session_screen.toolbar.back_to_home_button.clicked.connect(
+        self.training_session_complete_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
 
     def profiles_screen_flows(self):

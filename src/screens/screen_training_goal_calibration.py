@@ -51,7 +51,7 @@ class TrainingGoalCalibrationScreen(QWidget):
         # NOTE: This will change to temp_training_lax_goal.png
         self.lax_goal_img_location = str(
             # Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
-            Path.home()) + '/Developer/ball_e_gui/src/images/temp_training_lax_goal.png'
+            pathlib.Path.home()) + '/Developer/ball_e_gui/src/images/temp_training_lax_goal.png'
 
         self.pixmap_object = QPixmap()
         self.pixmap_object.load(self.lax_goal_img_location)
@@ -90,7 +90,7 @@ class TrainingGoalCalibrationScreen(QWidget):
         # Clear the image
         # NOTE: This will change to temp_training_lax_goal.png
         self.lax_goal_img_location = str(
-            Path.home()) + '/Developer/ball_e_gui/src/images/temp_training_lax_goal.png'
+            pathlib.Path.home()) + '/Developer/ball_e_gui/src/images/temp_training_lax_goal.png'
 
         self.pixmap_object = QPixmap()
         self.pixmap_object.load(self.lax_goal_img_location)
