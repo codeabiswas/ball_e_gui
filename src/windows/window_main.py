@@ -15,13 +15,15 @@ try:
     import screen_training
     import screen_training_automated_session
     import screen_training_drill_profile_selection
-    import screen_training_goal_calibration
-    import screen_training_goal_calibration_take_photo
+    import screen_training_get_distance_from_goal
+    # import screen_training_goal_calibration
+    # import screen_training_goal_calibration_take_photo
     import screen_training_goalie_profile_selection
     import screen_training_manual_session
     import screen_training_number_of_balls_selection
     import screen_training_session_complete
-    import screen_training_session_recording_check
+
+    # import screen_training_session_recording_check
 except ImportError:
     print("{}: Imports failed".format(__file__))
 finally:
@@ -48,9 +50,10 @@ class MainWindow(QMainWindow):
         self.training_goalie_profile_selection_screen = screen_training_goalie_profile_selection.TrainingGoalieProfileSelectionScreen()
         self.training_drill_profile_selection_screen = screen_training_drill_profile_selection.TrainingDrillProfileSelectionScreen()
         # For the Number of Balls selection screen, the previous screen needs to be known, therefore it will be called from the respective flow
-        self.training_session_recording_check_screen = screen_training_session_recording_check.TrainingSessionRecordingCheckScreen()
-        self.training_goal_calibration_take_photo_screen = screen_training_goal_calibration_take_photo.TrainingGoalCalibrationTakePhotoScreen()
-        self.training_goal_calibration_screen = screen_training_goal_calibration.TrainingGoalCalibrationScreen()
+        # self.training_session_recording_check_screen = screen_training_session_recording_check.TrainingSessionRecordingCheckScreen()
+        # self.training_goal_calibration_take_photo_screen = screen_training_goal_calibration_take_photo.TrainingGoalCalibrationTakePhotoScreen()
+        # self.training_goal_calibration_screen = screen_training_goal_calibration.TrainingGoalCalibrationScreen()
+        self.training_get_distance_from_goal_screen = screen_training_get_distance_from_goal.TrainingGetDistanceFromGoalScreen()
         self.training_session_complete_screen = screen_training_session_complete.TrainingSessionCompleteScreen()
 
         self.profiles_screen = screen_profiles.ProfilesScreen()
@@ -78,11 +81,14 @@ class MainWindow(QMainWindow):
         self.main_widget.addWidget(
             self.training_drill_profile_selection_screen)
         self.main_widget.addWidget(
-            self.training_session_recording_check_screen)
-        self.main_widget.addWidget(
-            self.training_goal_calibration_take_photo_screen)
-        self.main_widget.addWidget(
-            self.training_goal_calibration_screen)
+            self.training_get_distance_from_goal_screen
+        )
+        # self.main_widget.addWidget(
+        #     self.training_session_recording_check_screen)
+        # self.main_widget.addWidget(
+        #     self.training_goal_calibration_take_photo_screen)
+        # self.main_widget.addWidget(
+        #     self.training_goal_calibration_screen)
         self.main_widget.addWidget(
             self.training_session_complete_screen)
 
@@ -106,9 +112,10 @@ class MainWindow(QMainWindow):
         self.training_screen_flows()
         self.training_goalie_profile_selection_screen_flows()
         self.training_drill_profile_selection_screen_flows()
-        self.training_session_recording_check_screen_flows()
-        self.training_goal_calibration_take_photo_screen_flows()
-        self.training_goal_calibration_screen_flows()
+        # self.training_session_recording_check_screen_flows()
+        # self.training_goal_calibration_take_photo_screen_flows()
+        # self.training_goal_calibration_screen_flows()
+        self.training_get_distance_from_goal_screen_flows()
         self.training_session_complete_screen_flows()
 
         # Profiles Screen Flows
@@ -278,6 +285,17 @@ class MainWindow(QMainWindow):
         self.main_widget.setCurrentWidget(
             self.training_number_of_balls_selection_screen)
 
+    def training_get_distance_from_goal_flows(self):
+        # Toolbar Flows
+        self.training_get_distance_from_goal_screen.toolbar.back_to_home_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.home_screen))
+        self.training_get_distance_from_goal_screen.toolbar.prev_screen_button.clicked.connect(
+            lambda: self.main_widget.setCurrentWidget(self.training_number_of_balls_selection_screen))
+
+        # Screen Flows
+        self.training_get_distance_from_goal_screen.next_page_button.clicked.connect(
+            self.training_automated_or_manual_session_screen_setup)
+
     def training_session_recording_check_screen_flows(self):
         # Toolbar Flows
         self.training_session_recording_check_screen.toolbar.back_to_home_button.clicked.connect(
@@ -336,7 +354,7 @@ class MainWindow(QMainWindow):
         if self.manual_session:
             self.training_manual_session_screen = screen_training_manual_session.TrainingManualSessionScreen(
                 total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(
-                ), distance_from_goal=self.training_goal_calibration_screen.get_goal_distance()
+                ), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance()
             )
             self.training_manual_session_screen.training_complete_emitter.connect(
                 self.update_main_widget_to_training_session_complete_screen)
@@ -347,10 +365,10 @@ class MainWindow(QMainWindow):
         else:
             if self.automated_with_goalie_session:
                 self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
-                    drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_goal_calibration_screen.get_goal_distance(), goalie_name=self.training_goalie_profile_selection_screen.get_selected_goalie_profile())
+                    drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance(), goalie_name=self.training_goalie_profile_selection_screen.get_selected_goalie_profile())
             else:
                 self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
-                    drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_goal_calibration_screen.get_goal_distance())
+                    drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance())
             self.training_automated_session_screen.training_complete_emitter.connect(
                 self.update_main_widget_to_training_session_complete_screen)
             self.training_automated_session_screen_flows()
