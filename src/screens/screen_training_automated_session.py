@@ -61,7 +61,7 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         self.column_layout = QVBoxLayout()
         self.column_layout.addWidget(ProfileLabel(
-            "Running: {}".format(self.drill_name)))
+            "Running: {}".format(self.drill_name.format('_', ' ').title())))
         self.ball_number_label = ProfileLabel(
             "Ball {} out of {}".format(self.curr_ball_num, self.total_ball_num))
         self.column_layout.addWidget(self.ball_number_label)
