@@ -68,10 +68,12 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         self.start_button = FullPageButton("Start")
         self.button_layout.addWidget(self.start_button)
+        self.start_button.clicked.connect(self.on_click_start_button)
         # self.pause_button = FullPageButton("Pause")
         # self.button_layout.addWidget(self.pause_button)
         self.stop_button = FullPageButton("Stop")
         self.button_layout.addWidget(self.stop_button)
+        self.stop_button.clicked.connect(self.on_click_stop_button)
 
         self.row_layout.addLayout(self.button_layout)
 
@@ -82,8 +84,6 @@ class TrainingAutomatedSessionScreen(QWidget):
 
     def on_click_start_button(self):
 
-        self.start_button.setEnabled(False)
-        self.stop_button.setEnabled(True)
         self.drill_handler_thread.start_drill()
         self.drill_handler_thread.run_automated_drill()
 
@@ -102,7 +102,7 @@ class TrainingAutomatedSessionScreen(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    win = TestWindow(TrainingAutomatedSessionScreen("Drill A", 20))
+    win = TestWindow(TrainingAutomatedSessionScreen(distance_from_goal=20,drill_name="t_drill",total_ball_num=10))
     win.show()
     sys.exit(app.exec_())
 
