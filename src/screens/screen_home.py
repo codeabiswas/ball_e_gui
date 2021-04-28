@@ -52,7 +52,8 @@ class HomeScreen(QWidget):
         self.setLayout(home_screen_layout)
 
     def OnClickPowerOffButton(self):
-        os.system("shutdown /s /t 0")
+        # os.system("shutdown -s -t 0")
+        os.system("systemctl poweroff")
         # sys.exit()
 
     def get_window_title(self):
