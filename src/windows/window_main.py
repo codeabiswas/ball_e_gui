@@ -369,7 +369,7 @@ class MainWindow(QMainWindow):
             else:
                 self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
                     drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance())
-            self.training_automated_session_screen.training_complete_emitter.connect(
+            self.training_automated_session_screen.drill_handler_thread.run_drill_signal.connect(
                 self.update_main_widget_to_training_session_complete_screen)
             self.training_automated_session_screen_flows()
             self.main_widget.addWidget(self.training_automated_session_screen)

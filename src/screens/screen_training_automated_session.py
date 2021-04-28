@@ -11,7 +11,7 @@ try:
     from component_button import FullPageButton
     from component_labels import ProfileLabel
     from component_toolbar import ToolbarComponent
-    from drill_session_handler import DrillSessionHandler
+    from threaded_drill_session_handler import ThreadedDrillSessionHandler
     from window_test import TestWindow
 
 except ImportError:
@@ -42,7 +42,7 @@ class TrainingAutomatedSessionScreen(QWidget):
         self.total_ball_num = total_ball_num
 
         # Object which controls a drill session
-        self.drill_handler = DrillSessionHandler(
+        self.drill_handler_thread = ThreadedDrillSessionHandler(
             distance_from_goal=self.distance_from_goal, drill_name=self.drill_name, goalie_name=self.goalie_name)
 
         # Create a screen layout object to populate
@@ -84,12 +84,12 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
-        self.drill_handler.start_drill()
-        self.drill_handler.run_automated_drill()
+        self.drill_handler_thread.start_drill()
+        self.drill_handler_thread.run_automated_drill()
 
     def on_click_stop_button(self):
 
-        self.drill_handler.stop_drill()
+        self.drill_handler_thread.stop_drill()
 
     def get_window_title(self):
         """Helper function to return this window's title

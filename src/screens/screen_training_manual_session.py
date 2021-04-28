@@ -13,7 +13,6 @@ try:
     from component_dropdown import Dropdown
     from component_labels import ProfileLabel
     from component_toolbar import ToolbarComponent
-    from drill_session_handler import DrillSessionHandler
     from threaded_drill_session_handler import ThreadedDrillSessionHandler
     from window_test import TestWindow
 except ImportError:
@@ -69,7 +68,7 @@ class TrainingManualSessionScreen(QWidget):
         self.row_layout.addWidget(self.ball_number_label)
 
         self.column_layout = QVBoxLayout()
-        self.shot_location_label = ProfileLabel("")
+        self.shot_location_label = ProfileLabel("Shot Location: Center Middle")
         self.column_layout.addWidget(self.shot_location_label)
 
         self.lax_goal_label = QLabel()
@@ -218,12 +217,12 @@ class TrainingManualSessionScreen(QWidget):
                 "Shot Location: Bottom Middle")
 
     def start_shoot_button_clicked(self):
+        self.start_shoot_button.setDisabled(True)
         if self.start_button:
             self.drill_handler_thread.start_drill()
             self.start_shoot_button.setText("Shoot")
             self.start_button = False
         else:
-
             self.drill_handler_thread.run_manual_drill(
                 self.shot_loc, self.selected_speed)
             self.curr_ball_num += 1
@@ -231,6 +230,7 @@ class TrainingManualSessionScreen(QWidget):
                 self.drill_handler_thread.stop_drill()
             self.ball_number_label.setText("Ball {} out of {}".format(
                 self.curr_ball_num, self.total_ball_num))
+        self.start_shoot_button.setDisabled(False)
 
     def get_window_title(self):
         """Helper function to return this window's title
