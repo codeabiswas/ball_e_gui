@@ -217,7 +217,7 @@ class TrainingManualSessionScreen(QWidget):
                 "Shot Location: Bottom Middle")
 
     def start_shoot_button_clicked(self):
-        self.start_shoot_button.setDisabled(True)
+        self.start_shoot_button.setEnabled(False)
         if self.start_button:
             self.drill_handler_thread.start_drill()
             self.start_shoot_button.setText("Shoot")
@@ -230,7 +230,7 @@ class TrainingManualSessionScreen(QWidget):
                 self.drill_handler_thread.stop_drill()
             self.ball_number_label.setText("Ball {} out of {}".format(
                 self.curr_ball_num, self.total_ball_num))
-        self.start_shoot_button.setDisabled(False)
+        self.start_shoot_button.setEnabled(True)
 
     def get_window_title(self):
         """Helper function to return this window's title
