@@ -99,7 +99,7 @@ class TrainingAutomatedSessionScreen(QWidget):
     def update_ball_num(self, update_bool):
         if update_bool:
             self.curr_ball_num += 1
-            self.ball_number_label = ProfileLabel(
+            self.ball_number_label.setText(
                 "Ball {} out of {}".format(self.curr_ball_num, self.total_ball_num))
 
     def get_window_title(self):
