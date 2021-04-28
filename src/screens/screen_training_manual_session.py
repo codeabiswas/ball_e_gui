@@ -104,7 +104,7 @@ class TrainingManualSessionScreen(QWidget):
         self.setLayout(self.screen_layout)
 
     def set_speed_selection(self, selected_speed):
-        self.selected_speed = selected_speed
+        self.selected_speed = int(selected_speed)
 
     def lax_goal_image_setup(self):
 
