@@ -311,10 +311,10 @@ class MainWindow(QMainWindow):
 
         self.training_goal_calibration_take_photo_screen.cleanup_steps()
 
-        if button_type == "prev_screen":
+        if button_type == "home_screen":
             self.main_widget.setCurrentWidget(
                 self.home_screen)
-        elif button_type == "home_screen":
+        elif button_type == "prev_screen":
             self.main_widget.setCurrentWidget(
                 self.training_session_recording_check_screen)
         elif button_type == "next_screen":
