@@ -31,7 +31,8 @@ class Profiler():
                     if row_count == 0:
                         row_count += 1
                     else:
-                        info_dict[row[0]] = row[1]
+                        info_dict[row_count] = [row[0], row[1]]
+                        # info_dict[row[0]] = row[1]
                         row_count += 1
             elif "drill_profiles" in profile_path:
                 for row in csv_reader:

@@ -382,7 +382,10 @@ class GoalieProfilesScreen(QWidget):
         table_view.setColumnCount(2)
 
         # Iterates through all the information and populates the table
-        for curr_row, (drill_info, date_info) in enumerate(zip(goalie_info.keys(), goalie_info.values())):
+        for curr_row, (drill_info, drill_history) in enumerate(zip(goalie_info.keys(), goalie_info.values())):
+            # for curr_row, (drill_info, date_info) in enumerate(zip(goalie_info.keys(), goalie_info.values())):
+            drill_info = drill_history[0]
+            date_info = drill_history[1]
             drill_name_widget = QTableWidgetItem(drill_info)
             date_info_widget = QTableWidgetItem(date_info)
             self.table_font.setPixelSize(int(sc.FONT_L[:2]))
