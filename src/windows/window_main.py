@@ -386,14 +386,14 @@ class MainWindow(QMainWindow):
         self.training_automated_session_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
         self.training_automated_session_screen.toolbar.prev_screen_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_screen))
+            lambda: self.main_widget.setCurrentWidget(self.training_get_distance_from_goal_screen))
 
     def training_manual_session_screen_flows(self):
         # Toolbar Flows
         self.training_manual_session_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
         self.training_manual_session_screen.toolbar.prev_screen_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.training_goal_calibration_screen))
+            lambda: self.main_widget.setCurrentWidget(self.training_get_distance_from_goal_screen))
 
     def training_session_complete_screen_flows(self):
         # Toolbar Flows
