@@ -231,6 +231,7 @@ class TrainingManualSessionScreen(QWidget):
 
     @pyqtSlot(bool)
     def enable_start_shoot_button(self, enable_bool):
+        print('hit enable_start_shoot_button with val: {}'.format(enable_bool))
         self.start_shoot_button.setDisabled(enable_bool)
 
     def get_window_title(self):
