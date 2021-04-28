@@ -16,7 +16,7 @@ try:
     from window_test import TestWindow
 
 except ImportError:
-    print("Imports failed")
+    print("{}: Imports failed".format(__file__))
 finally:
 
     from PyQt5 import QtWidgets

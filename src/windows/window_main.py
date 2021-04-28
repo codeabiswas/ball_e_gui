@@ -23,7 +23,7 @@ try:
     import screen_training_session_complete
     import screen_training_session_recording_check
 except ImportError:
-    print("Screen imports failed")
+    print("{}: Imports failed".format(__file__))
 finally:
     from PyQt5 import QtWidgets
     from PyQt5.QtCore import Qt, pyqtSlot

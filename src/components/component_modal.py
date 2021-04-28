@@ -8,7 +8,7 @@ try:
 
     from component_button import GenericButton
 except ImportError:
-    print("Imports failed")
+    print("{}: Imports failed".format(__file__))
 finally:
     from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import (QDialog, QHBoxLayout, QLabel, QVBoxLayout,

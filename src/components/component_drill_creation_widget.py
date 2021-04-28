@@ -12,7 +12,7 @@ try:
     from component_dropdown import Dropdown
     from component_labels import ProfileLabel
 except ImportError:
-    print("Imports failed")
+    print("{}: Imports failed".format(__file__))
 finally:
     import csv
 
