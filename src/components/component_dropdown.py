@@ -6,7 +6,7 @@ try:
 
     import style_constants as sc
 except ImportError:
-    print("Imports failed")
+    print("{}: Imports failed".format(__file__))
 finally:
     from PyQt5.QtWidgets import QComboBox
 
