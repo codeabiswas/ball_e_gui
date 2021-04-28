@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
 
         self.training_number_of_balls_selection_screen.next_page_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(
-                self.training_session_recording_check_screen)
+		self.training_get_distance_from_goal_screen)
         )
 
     def helper_only_training_drill_profile_profile_selection_screen_setup(self):
@@ -285,7 +285,7 @@ class MainWindow(QMainWindow):
         self.main_widget.setCurrentWidget(
             self.training_number_of_balls_selection_screen)
 
-    def training_get_distance_from_goal_flows(self):
+    def training_get_distance_from_goal_screen_flows(self):
         # Toolbar Flows
         self.training_get_distance_from_goal_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
