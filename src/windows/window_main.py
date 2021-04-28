@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
 
         self.training_number_of_balls_selection_screen.next_page_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(
-		self.training_get_distance_from_goal_screen)
+                self.training_get_distance_from_goal_screen)
         )
 
     def helper_only_training_drill_profile_profile_selection_screen_setup(self):
@@ -356,7 +356,7 @@ class MainWindow(QMainWindow):
                 total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(
                 ), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance()
             )
-            self.training_manual_session_screen.training_complete_emitter.connect(
+            self.training_manual_session_screen.drill_handler_thread.connect(
                 self.update_main_widget_to_training_session_complete_screen)
             self.training_manual_session_screen_flows()
             self.main_widget.addWidget(self.training_manual_session_screen)
@@ -378,8 +378,9 @@ class MainWindow(QMainWindow):
 
     @pyqtSlot(bool)
     def update_main_widget_to_training_session_complete_screen(self, some_bool):
-        self.main_widget.setCurrentWidget(
-            self.training_session_complete_screen)
+        if not some_bool:
+            self.main_widget.setCurrentWidget(
+                self.training_session_complete_screen)
 
     def training_automated_session_screen_flows(self):
         # Toolbar Flows

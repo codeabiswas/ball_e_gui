@@ -14,6 +14,7 @@ try:
     from component_labels import ProfileLabel
     from component_toolbar import ToolbarComponent
     from drill_session_handler import DrillSessionHandler
+    from threaded_drill_session_handler import ThreadedDrillSessionHandler
     from window_test import TestWindow
 except ImportError:
     print("{}: Imports failed".format(__file__))
@@ -47,10 +48,10 @@ class TrainingManualSessionScreen(QWidget):
         self.selected_speed = 30
 
         # The emitter that lets PyQt know when training is complete
-        self.training_complete_emitter = pyqtSignal(bool)
+        # self.training_complete_emitter = pyqtSignal(bool)
 
         # Object which controls a drill session
-        self.drill_handler = DrillSessionHandler(
+        self.drill_handler_thread = ThreadedDrillSessionHandler(
             distance_from_goal=self.distance_from_goal)
 
         # Create a screen layout object to populate
@@ -218,16 +219,16 @@ class TrainingManualSessionScreen(QWidget):
 
     def start_shoot_button_clicked(self):
         if self.start_button:
-            self.drill_handler.start_drill()
+            self.drill_handler_thread.start_drill()
             self.start_shoot_button.setText("Shoot")
             self.start_button = False
         else:
 
-            self.drill_handler.run_manual_drill(
+            self.drill_handler_thread.run_manual_drill(
                 self.shot_loc, self.selected_speed)
             self.curr_ball_num += 1
             if self.curr_ball_num > self.total_ball_num:
-                self.training_complete_emitter.emit(True)
+                self.drill_handler_thread.stop_drill()
             self.ball_number_label.setText("Ball {} out of {}".format(
                 self.curr_ball_num, self.total_ball_num))
 
