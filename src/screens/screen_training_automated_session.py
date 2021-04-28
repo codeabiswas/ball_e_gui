@@ -1,3 +1,5 @@
+from PyQt5.QtCore import pyqtSlot
+
 try:
     import pathlib
     import sys
@@ -44,6 +46,8 @@ class TrainingAutomatedSessionScreen(QWidget):
         # Object which controls a drill session
         self.drill_handler_thread = ThreadedDrillSessionHandler(
             distance_from_goal=self.distance_from_goal, drill_name=self.drill_name, goalie_name=self.goalie_name)
+        self.drill_handler_thread.update_ball_num_signal.connect(
+            self.update_ball_num)
 
         # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
@@ -91,6 +95,13 @@ class TrainingAutomatedSessionScreen(QWidget):
 
         self.drill_handler_thread.stop_drill()
 
+    @pyqtSlot(bool)
+    def update_ball_num(self, update_bool):
+        if update_bool:
+            self.curr_ball_num += 1
+            self.ball_number_label = ProfileLabel(
+                "Ball {} out of {}".format(self.curr_ball_num, self.total_ball_num))
+
     def get_window_title(self):
         """Helper function to return this window's title
 
@@ -102,7 +113,8 @@ class TrainingAutomatedSessionScreen(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    win = TestWindow(TrainingAutomatedSessionScreen(distance_from_goal=20,drill_name="t_drill",total_ball_num=10))
+    win = TestWindow(TrainingAutomatedSessionScreen(
+        distance_from_goal=20, drill_name="t_drill", total_ball_num=10))
     win.show()
     sys.exit(app.exec_())
 
