@@ -49,8 +49,6 @@ class TrainingManualSessionScreen(QWidget):
         # Object which controls a drill session
         self.drill_handler_thread = ThreadedDrillSessionHandler(
             distance_from_goal=self.distance_from_goal)
-        self.drill_handler_thread.process_ball_signal.connect(
-            self.enable_start_shoot_button)
 
         # Create a screen layout object to populate
         self.screen_layout = QVBoxLayout()
@@ -216,6 +214,7 @@ class TrainingManualSessionScreen(QWidget):
                 "Shot Location: Bottom Middle")
 
     def start_shoot_button_clicked(self):
+        self.start_shoot_button.setEnabled(False)
         if self.start_button:
             self.drill_handler_thread.start_drill()
             self.start_shoot_button.setText("Shoot")
@@ -228,11 +227,7 @@ class TrainingManualSessionScreen(QWidget):
                 self.drill_handler_thread.stop_drill()
             self.ball_number_label.setText("Ball {} out of {}".format(
                 self.curr_ball_num, self.total_ball_num))
-
-    @pyqtSlot(bool)
-    def enable_start_shoot_button(self, enable_bool):
-        print('hit enable_start_shoot_button with val: {}'.format(enable_bool))
-        self.start_shoot_button.setDisabled(enable_bool)
+        self.start_shoot_button.setEnabled(True)
 
     def get_window_title(self):
         """Helper function to return this window's title
