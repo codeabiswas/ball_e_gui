@@ -20,6 +20,7 @@ try:
 except ImportError:
     print("{}: Imports failed".format(__file__))
 finally:
+    import csv
     import shutil
 
     from PyQt5 import QtWidgets
@@ -230,7 +231,7 @@ class GoalieProfilesScreen(QWidget):
         """
 
         # Fetch the location of the goalie profile
-        location = str(Path.home()) + '/Documents/ball_e_profiles/goalie_profiles/' + \
+        location = str(pathlib.Path.home()) + '/Documents/ball_e_profiles/goalie_profiles/' + \
             self.main_table_view.item(
                 table_row, 0).text().replace(' ', '_').lower()
         # Remove the directory and remove the row from the table
@@ -283,7 +284,7 @@ class GoalieProfilesScreen(QWidget):
         """
 
         # Location where the profile will be stored
-        location = str(Path.home()) + '/Documents/ball_e_profiles/goalie_profiles/' + \
+        location = str(pathlib.Path.home()) + '/Documents/ball_e_profiles/goalie_profiles/' + \
             goalie_name.replace(' ', '_').lower()
 
         # Ensure that the goalie profile does not exist (regardless of case-sensitivity). If it does, then throw an error informing the user about it
@@ -292,6 +293,12 @@ class GoalieProfilesScreen(QWidget):
             pathlib.Path(location).mkdir(parents=True, exist_ok=False)
             pathlib.Path(location+'/{}.csv'.format(goalie_name.replace(' ',
                                                                        '_').lower())).touch(exist_ok=False)
+            goalie_path = str(pathlib.Path.home())+"/Documents/ball_e_profiles/goalie_profiles/{goalie_name}/{goalie_name}.csv".format(
+                goalie_name=goalie_name.replace(' ', '_').lower())
+            with open(goalie_path, 'w', newline='') as file:
+                writer = csv.writer(file, delimiter=',')
+                writer.writerow(
+                    ["Drill Name", "Date Completed (Most recent prioritized)"])
             # Append this new profile to the end of the table
             last_row_num = self.main_table_view.rowCount()
             self.main_table_view.insertRow(last_row_num)

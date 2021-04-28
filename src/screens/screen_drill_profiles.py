@@ -22,7 +22,6 @@ except ImportError:
     print("{}: Imports failed".format(__file__))
 finally:
     import csv
-    import pathlib
     import shutil
 
     from PyQt5 import QtWidgets
@@ -232,7 +231,7 @@ class DrillProfilesScreen(QWidget):
         """
 
         # Fetch the location of the drill profile
-        location = str(Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
+        location = str(pathlib.Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
             self.main_table_view.item(
                 table_row, 0).text().replace(' ', '_').lower()
         # Remove the directory and remove the row from the table
@@ -254,7 +253,7 @@ class DrillProfilesScreen(QWidget):
         """
 
         # Location where the profile will be stored
-        location = str(Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
+        location = str(pathlib.Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
             drill_name.replace(' ', '_').lower()
 
         # Ensure that the drill profile does not exist (regardless of case-sensitivity). If it does, then throw an error informing the user about it
@@ -427,11 +426,11 @@ class DrillProfilesScreen(QWidget):
         create_new_page_two.setLayout(create_new_page_two_layout)
 
         # First, check that the drill profile can be validly created
-        drill_location = str(Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
+        drill_location = str(pathlib.Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
             drill_name.replace(' ', '_').lower()
 
         if after_name_input:
-            if Path(drill_location).is_dir():
+            if pathlib.Path(drill_location).is_dir():
                 error_modal_layout = QVBoxLayout()
                 error_modal_layout.addWidget(ProfileLabel("Drill Exists"))
                 Modal(
@@ -507,7 +506,7 @@ class DrillProfilesScreen(QWidget):
 
         create_new_page_three.setLayout(create_new_page_three_layout)
 
-        drill_location = str(Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
+        drill_location = str(pathlib.Path.home()) + '/Documents/ball_e_profiles/drill_profiles/' + \
             drill_name.replace(' ', '_').lower(
         ) + '/{}.csv'.format(drill_name.replace(' ', '_').lower())
 
