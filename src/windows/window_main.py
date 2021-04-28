@@ -356,7 +356,7 @@ class MainWindow(QMainWindow):
                 total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(
                 ), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance()
             )
-            self.training_manual_session_screen.drill_handler_thread.connect(
+            self.training_manual_session_screen.drill_handler_thread.run_drill_signal.connect(
                 self.update_main_widget_to_training_session_complete_screen)
             self.training_manual_session_screen_flows()
             self.main_widget.addWidget(self.training_manual_session_screen)
