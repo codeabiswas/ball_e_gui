@@ -364,13 +364,9 @@ class MainWindow(QMainWindow):
                 self.training_manual_session_screen)
         else:
             if self.automated_with_goalie_session:
-                print("In automated with goalie session, drill: {} for goalie: {}".format(
-                    self.training_drill_profile_selection_screen.get_selected_drill_profile(), self.training_goalie_profile_selection_screen.get_selected_goalie_profile()))
                 self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
                     drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance(), goalie_name=self.training_goalie_profile_selection_screen.get_selected_goalie_profile())
             else:
-                print("In automated, drill: {}".format(
-                    self.training_drill_profile_selection_screen.get_selected_drill_profile()))
                 self.training_automated_session_screen = screen_training_automated_session.TrainingAutomatedSessionScreen(
                     drill_name=self.training_drill_profile_selection_screen.get_selected_drill_profile(), total_ball_num=self.training_number_of_balls_selection_screen.get_session_ball_number(), distance_from_goal=self.training_get_distance_from_goal_screen.get_goal_distance())
             self.training_automated_session_screen.drill_handler_thread.run_drill_signal.connect(
