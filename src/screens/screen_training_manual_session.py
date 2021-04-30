@@ -55,6 +55,8 @@ class TrainingManualSessionScreen(QWidget):
 
         self.toolbar = ToolbarComponent(
             self.window_title, "Back to Goal Calib.")
+        self.toolbar.prev_screen_button.setEnabled(False)
+        self.toolbar.back_to_home_button.setEnabled(False)
 
         self.screen_layout.addWidget(self.toolbar)
 
