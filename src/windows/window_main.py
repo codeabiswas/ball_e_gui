@@ -19,8 +19,8 @@ try:
     import screen_help
     import screen_help_calibration
     import screen_help_profiles
-    import screen_help_session_recording
     import screen_help_training
+    import screen_help_using_ball_e
     import screen_home
     import screen_profiles
     import screen_training
@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         self.calibration_help_screen = screen_help_calibration.CalibrationHelpScreen()
         self.training_help_screen = screen_help_training.TrainingHelpScreen()
         self.profiles_help_screen = screen_help_profiles.ProfilesHelpScreen()
-        self.session_recording_help_screen = screen_help_session_recording.SessionRecordingHelpScreen()
+        self.using_ball_e_help_screen = screen_help_using_ball_e.UsingBallEHelpScreen()
 
         # The Stacked Widget
         self.main_widget = QtWidgets.QStackedWidget()
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         self.main_widget.addWidget(self.calibration_help_screen)
         self.main_widget.addWidget(self.training_help_screen)
         self.main_widget.addWidget(self.profiles_help_screen)
-        self.main_widget.addWidget(self.session_recording_help_screen)
+        self.main_widget.addWidget(self.using_ball_e_help_screen)
 
         # For program startup, set it as the current widget
         self.main_widget.setCurrentWidget(self.home_screen)
@@ -162,7 +162,7 @@ class MainWindow(QMainWindow):
         # Profiles Help Screen Flows
         self.profiles_help_screen_flows()
         # Session Recording Help Screen Flows
-        self.session_recording_help_screen_flows()
+        self.using_ball_e_help_screen_flows()
 
     def stacked_widget_updated(self, index):
         """stacked_widget_updated.
@@ -591,7 +591,7 @@ class MainWindow(QMainWindow):
         self.help_screen.profiles_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.profiles_help_screen))
         self.help_screen.session_recording_screen_button.clicked.connect(
-            lambda: self.main_widget.setCurrentWidget(self.session_recording_help_screen))
+            lambda: self.main_widget.setCurrentWidget(self.using_ball_e_help_screen))
 
     def calibration_help_screen_flows(self):
         """calibration_help_screen_flows.
@@ -629,16 +629,16 @@ class MainWindow(QMainWindow):
         self.profiles_help_screen.toolbar.prev_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.help_screen))
 
-    def session_recording_help_screen_flows(self):
-        """session_recording_help_screen_flows.
+    def using_ball_e_help_screen_flows(self):
+        """using_ball_e_help_screen_flows.
 
         This function executes all necessary setup that needs to happen in the widget. Usually it is setting the appropriate page locations in the Toolbar's buttons. If the page has other buttons, then it connects those buttons with the appropriate actions/locations.
         """
 
         # Toolbar Flows
-        self.session_recording_help_screen.toolbar.back_to_home_button.clicked.connect(
+        self.using_ball_e_help_screen.toolbar.back_to_home_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.home_screen))
-        self.session_recording_help_screen.toolbar.prev_screen_button.clicked.connect(
+        self.using_ball_e_help_screen.toolbar.prev_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.help_screen))
 
 

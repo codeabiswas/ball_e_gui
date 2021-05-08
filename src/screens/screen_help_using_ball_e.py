@@ -1,7 +1,7 @@
 """
-screen_help_session_recording.py
+screen_help_using_ball_e.py
 ---
-This file contains the SessionRecordingHelpScreen class, which is the Help Screen regarding Session Reccording in Ball-E's GUI.
+This file contains the UsingBallEHelpScreen class, which is the Help Screen regarding Using Ball-E in general.
 ---
 
 Author: Andrei Biswas (@codeabiswas)
@@ -31,10 +31,10 @@ finally:
     from PyQt5.QtWidgets import QApplication, QListWidget, QVBoxLayout, QWidget
 
 
-class SessionRecordingHelpScreen(QWidget):
-    """SessionRecordingHelpScreen.
+class UsingBallEHelpScreen(QWidget):
+    """UsingBallEHelpScreen.
 
-    This class instantiates and sets up the QWidget object with all appropriate Questions and Answers regarding Goalie and Drill Profiles
+    This class instantiates and sets up the QWidget object with all appropriate Questions and Answers regarding how to use Ball-E
     """
 
     def __init__(self, parent=None):
@@ -51,7 +51,7 @@ class SessionRecordingHelpScreen(QWidget):
 
         # Get the docs for this section
         doc_reader = hdr.DocReader(
-            'session_recording/session_recording_doc.md')
+            'using_ball_e/using_ball_e_doc.md')
         self.docs = doc_reader.get_doc()
 
         screen_layout = QVBoxLayout()
@@ -104,11 +104,11 @@ class SessionRecordingHelpScreen(QWidget):
 def main():
     """main.
 
-    Main prototype/testing area. Code prototyping and checking happens here. 
+    Main prototype/testing area. Code prototyping and checking happens here.
     """
 
     app = QApplication(sys.argv)
-    win = TestWindow(SessionRecordingHelpScreen())
+    win = TestWindow(UsingBallEHelpScreen())
     win.show()
     sys.exit(app.exec_())
 
