@@ -590,7 +590,7 @@ class MainWindow(QMainWindow):
             lambda: self.main_widget.setCurrentWidget(self.training_help_screen))
         self.help_screen.profiles_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.profiles_help_screen))
-        self.help_screen.session_recording_screen_button.clicked.connect(
+        self.help_screen.using_ball_e_screen_button.clicked.connect(
             lambda: self.main_widget.setCurrentWidget(self.using_ball_e_help_screen))
 
     def calibration_help_screen_flows(self):
