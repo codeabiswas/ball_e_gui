@@ -1,3 +1,14 @@
+"""
+screen_drill_profiles.py
+---
+This file contains the DrillProfilesScreen class, which is the main widget that allows user to manage drill profiles for Ball-E.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -199,6 +210,13 @@ class DrillProfilesScreen(QWidget):
         self.curr_drill_profiles_len = len(self.drill_profiles)
 
     def choose_main_table_click_action(self, item):
+        """choose_main_table_click_action.
+
+        This function is the main action that occurs after one of the table's cells has been clicked
+
+        :param item: The object that was clicked in the table
+        """
+
         # Unselect the currently picked cell
         self.main_table_view.selectedItems()[0].setSelected(False)
 
@@ -364,7 +382,7 @@ class DrillProfilesScreen(QWidget):
         )
 
     def create_new_drill_profile_modal_page_one(self, item):
-        """The modal for creating a new drill profile
+        """The modal for creating a new drill profile, but page one
 
         Args:
             item (Object): The cell object selected in TableView
@@ -407,6 +425,14 @@ class DrillProfilesScreen(QWidget):
             create_new_page_one.exec_()
 
     def create_new_drill_profile_modal_page_two(self, modal, drill_name, after_name_input):
+        """create_new_drill_profile_modal_page_two.
+
+        The modal for creating a new drill profile, but page two
+
+        :param modal: QDialog object representing the modal object
+        :param drill_name: String name of the drill
+        :param after_name_input: Boolean value for whether or not this modal should close
+        """
 
         if after_name_input:
             modal.close()
@@ -491,6 +517,13 @@ class DrillProfilesScreen(QWidget):
             self.remove_drill_profile(self.main_table_view.rowCount()-1)
 
     def create_new_drill_profile_modal_page_three(self, modal, drill_name):
+        """create_new_drill_profile_modal_page_three.
+
+        The modal for creating a new drill profile, but page three
+
+        :param modal: QDialog object representing the modal object
+        :param drill_name: String name of the drill
+        """
 
         modal.accept()
 
@@ -541,9 +574,21 @@ class DrillProfilesScreen(QWidget):
             self.remove_drill_profile(self.main_table_view.rowCount()-1)
 
     def update_total_drill_balls(self, updated_drill_balls):
+        """update_total_drill_balls.
+
+        Updates the number of balls for the drill profile from the dropwdown
+        
+        :param updated_drill_balls: String value of the dropdown
+        """
         self.curr_drill_balls = updated_drill_balls
 
     def update_drill_rof(self, updated_drill_rof):
+        """update_drill_rof.
+
+        Updates the Rate of Fire for the drill profile.
+
+        :param updated_drill_rof: String value of the dropdown
+        """
         self.curr_drill_rof = updated_drill_rof
 
     def get_window_title(self):
@@ -556,6 +601,11 @@ class DrillProfilesScreen(QWidget):
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(DrillProfilesScreen())
     win.show()
@@ -563,4 +613,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

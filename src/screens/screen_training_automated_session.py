@@ -1,4 +1,13 @@
-from PyQt5.QtCore import pyqtSlot
+"""
+screen_training_automated_session.py
+---
+This file contains the TrainingAutomatedSessionScreen class, which is the Automated Training Screen in Ball-E's GUI.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
 
 try:
     import pathlib
@@ -19,20 +28,28 @@ try:
 except ImportError:
     print("{}: Imports failed".format(__file__))
 finally:
-
+    from PyQt5.QtCore import pyqtSlot
     from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
 
 class TrainingAutomatedSessionScreen(QWidget):
-    """Screen to create, delete, and view Drill Profiles
+    """Screen for running the automated training session
 
     Args:
         QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
     """
 
     def __init__(self, drill_name, total_ball_num, distance_from_goal,  goalie_name=None):
-        """Widget Initialization
+        """__init__.
+
+        Widget initialization
+
+        :param drill_name: String name of the drill
+        :param total_ball_num: Total number of balls in Ball Queue
+        :param distance_from_goal: Distance from the goal in feet
+        :param goalie_name: String name of the goalie (if this is an automated training session which saves a goalie profile), else None
         """
+
         super().__init__()
 
         self.window_title = "Automated Training Session"
@@ -89,16 +106,30 @@ class TrainingAutomatedSessionScreen(QWidget):
         self.setLayout(self.screen_layout)
 
     def on_click_start_button(self):
+        """on_click_start_button.
+        
+        This function starts the drill session when the 'Start' button is clicked
+        """
 
         self.drill_handler_thread.start_drill()
         self.drill_handler_thread.run_automated_drill()
 
     def on_click_stop_button(self):
+        """on_click_stop_button.
+
+        This function stops the drill session when the 'Stop' button is clicked
+        """
 
         self.drill_handler_thread.stop_drill()
 
     @pyqtSlot(bool)
     def update_ball_num(self, update_bool):
+        """update_ball_num.
+
+        When a ball has been shot out and the drill handler notifies us, update the ball number in the UI
+        :param update_bool: Boolean value which when True, indicates if a ball has been shot
+        """
+
         if update_bool:
             self.curr_ball_num += 1
             self.ball_number_label.setText(
@@ -110,10 +141,16 @@ class TrainingAutomatedSessionScreen(QWidget):
         Returns:
             [string]: This window's title
         """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingAutomatedSessionScreen(
         distance_from_goal=20, drill_name="t_drill", total_ball_num=10))
@@ -122,4 +159,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

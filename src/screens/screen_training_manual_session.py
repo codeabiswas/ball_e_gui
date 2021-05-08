@@ -1,3 +1,14 @@
+"""
+screen_training_manual_session.py
+---
+This file contains the TraiingManualSessionScreen class, which is where the user can run a Manual Training Session.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -25,15 +36,21 @@ finally:
 
 
 class TrainingManualSessionScreen(QWidget):
-    """Screen to create, delete, and view Drill Profiles
+    """This class allows the user to run a Manual Training Session
 
     Args:
         QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
     """
 
     def __init__(self, total_ball_num, distance_from_goal):
-        """Widget Initialization
+        """__init__.
+
+        Widget Initialization
+
+        :param total_ball_num: Integer number for the total number of balls in Ball-E's Queue
+        :param distance_from_goal: Float number the distance from the goal (in feet)
         """
+
         super().__init__()
 
         self.window_title = "Manual Training Session"
@@ -103,9 +120,21 @@ class TrainingManualSessionScreen(QWidget):
         self.setLayout(self.screen_layout)
 
     def set_speed_selection(self, selected_speed):
+        """set_speed_selection.
+
+        This function sets the speed of the current ball to be shot out
+
+        :param selected_speed: String value of the dropdown for selecting speed of the ball
+        """
+
+        # Set the selected speed as an integer
         self.selected_speed = int(selected_speed)
 
     def lax_goal_image_setup(self):
+        """lax_goal_image_setup.
+        
+        This function sets up the lacrosse goal image such that the user can interact with the sections when shooting out a ball
+        """
 
         lax_goal_img_location = str(
             pathlib.Path.home()) + '/Developer/ball_e_gui/src/images/lax_goal.png'
@@ -148,6 +177,13 @@ class TrainingManualSessionScreen(QWidget):
         self.lax_goal_label.setPixmap(self.scaled_pixmap_obj)
 
     def show_shot_location(self, event):
+        """show_shot_location.
+
+        This functions shows the user which area of the goal the ball will be shot at given their input
+
+        :param event: The mouse click event that includes the x-and-y coordinates of where the event occurred on the screen.
+        """
+
         x_coord = event.pos().x()
         y_coord = event.pos().y()
 
@@ -216,11 +252,18 @@ class TrainingManualSessionScreen(QWidget):
                 "Shot Location: Bottom Middle")
 
     def start_shoot_button_clicked(self):
+        """start_shoot_button_clicked.
+        This function sets the Start/Stop button such that first, when the 'Start' button is pressed, it instantiates all the motors and then becomes the 'Shoot' button, which will allow the user to shoot the ball given the settings
+        """
+
+        # After the button has been clicked, disable it from registering further presses
         self.start_shoot_button.setEnabled(False)
+        # If it is still in 'Start' button state
         if self.start_button:
             self.drill_handler_thread.start_drill()
             self.start_shoot_button.setText("Shoot")
             self.start_button = False
+        # The button is in 'Shoot' state, so shoot the ball and update the label
         else:
             self.drill_handler_thread.run_manual_drill(
                 self.shot_loc, self.selected_speed)
@@ -229,6 +272,7 @@ class TrainingManualSessionScreen(QWidget):
                 self.drill_handler_thread.stop_drill()
             self.ball_number_label.setText("Ball {} out of {}".format(
                 self.curr_ball_num, self.total_ball_num))
+        # Re-enable the button to register clicks.
         self.start_shoot_button.setEnabled(True)
 
     def get_window_title(self):
@@ -237,10 +281,16 @@ class TrainingManualSessionScreen(QWidget):
         Returns:
             [string]: This window's title
         """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingManualSessionScreen(5))
     win.show()
@@ -248,4 +298,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

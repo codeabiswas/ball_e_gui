@@ -1,3 +1,14 @@
+"""
+screen_training_goal_calibration_take_photo.py
+---
+This file contains the classes required for taking a picture of the goal for calibration (i.e.: distance-finding) purposes.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -24,13 +35,28 @@ finally:
 
 
 class VideoThread(QThread):
+    """VideoThread.
+
+    This class gets the video stream from from the camera using OpenCV.
+    """
+
     change_pixmap_signal = pyqtSignal(np.ndarray)
 
     def __init__(self):
+        """__init__.
+
+        Initializes OpenCV appropriately
+        """
+
         super().__init__()
         self._run_flag = True
 
     def run(self):
+        """run.
+        
+        Captures the video stream
+        """
+
         # capture from web cam
         cap = cv2.VideoCapture(self.gstreamer_pipeline(), cv2.CAP_GSTREAMER)
         while self._run_flag:
@@ -54,6 +80,18 @@ class VideoThread(QThread):
         framerate=30,
         flip_method=0,
     ):
+        """gstreamer_pipeline.
+
+        Uses gstreamer to talk to camera module
+
+        :param capture_width: Width (in pixels) to capture feed
+        :param capture_height: Height (in pixels) to capture feed
+        :param display_width: Width (in pixels) to display feed
+        :param display_height: Height (in pixels) to display feed
+        :param framerate: Framerate (in fps) to display feed
+        :param flip_method: Argument for rotation of image capturing and displaying
+        """
+
         return (
             "nvarguscamerasrc ! "
             "video/x-raw(memory:NVMM), "
@@ -75,7 +113,19 @@ class VideoThread(QThread):
 
 
 class TrainingGoalCalibrationTakePhotoScreen(QWidget):
+    """TrainingGoalCalibrationScreen.
+
+    Screen for calibrating Ball-E with the goal
+    """
+
     def __init__(self, parent=None):
+        """__init__.
+
+        Initializes the Widget object with appropriate arguments
+
+        :param parent: Default arg.
+        """
+
         super().__init__(parent=parent)
 
         self.window_title = "Goal Calibration"
@@ -105,10 +155,11 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
 
         self.setLayout(screen_layout)
 
-    def get_window_title(self):
-        return self.window_title
-
     def start_camera(self):
+        """start_camera.
+
+        This function starts the camera feed.
+        """
         # create the video capture thread
         self.thread = VideoThread()
         # connect its signal to the update_image slot
@@ -117,6 +168,9 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
         self.thread.start()
 
     def cleanup_steps(self):
+        """cleanup_steps.
+        This function ensures that the camera's resources are properly disposed of when done
+        """
         # NOTE: This must be called so that camera pipeline is closed successfully
         self.thread.stop()
         cv2.imwrite('images/temp_training_lax_goal.png',
@@ -142,8 +196,21 @@ class TrainingGoalCalibrationTakePhotoScreen(QWidget):
             display_width, display_height, Qt.KeepAspectRatio)
         return QPixmap.fromImage(p)
 
+    def get_window_title(self):
+        """get_window_title.
+
+        Getter function for Window Title
+        """
+
+        return self.window_title
+
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingGoalCalibrationTakePhotoScreen())
     win.show()
@@ -151,4 +218,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

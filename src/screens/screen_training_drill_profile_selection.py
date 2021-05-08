@@ -1,3 +1,14 @@
+"""
+screen_training_drill_profile_selection.py
+---
+This file contains the TrainingDrillProfileSelectionScreen class, which is where the user selects the Drill Profile for an Automated Training Session.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -28,7 +39,19 @@ finally:
 
 
 class TrainingDrillProfileSelectionScreen(QWidget):
+    """TrainingDrillProfileSelectionScreen.
+
+    This class instantiates the QWidget object for allowing the user to pick a Drill for an Automated Training Session.
+    """
+
     def __init__(self, selected_goalie_profile=None):
+        """__init__.
+
+        Widget initialization
+
+        :param selected_goalie_profile: String name of the goalie (if this is an automated training session which saves a goalie profile), else None
+        """
+
         super().__init__()
 
         self.window_title = "Drill Profile Selection"
@@ -133,6 +156,11 @@ class TrainingDrillProfileSelectionScreen(QWidget):
             int(self.table_header.sizeHint().height()/2))
 
     def unselect_table_header(self):
+        """unselect_table_header.
+
+        This function deselects whatever has been clicked on the table header so that it does not look odd.
+        """
+
         # Unselect the currently picked cell
         self.table_header.selectedItems()[0].setSelected(False)
 
@@ -179,6 +207,13 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         main_table_hor_head.setSectionResizeMode(0, QHeaderView.Stretch)
 
     def choose_main_table_click_action(self, item):
+        """choose_main_table_click_action.
+
+        This function is the main action that occurs after one of the table's cells has been clicked
+
+        :param item: The object that was clicked in the table
+        """
+
         drill_name = self.main_table_view.item(item.row(), 0).text()
 
         self.drill_profile_selection_label.setText("You have selected: {}".format(
@@ -189,6 +224,11 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         self.selected_drill_profile = drill_name.replace(' ', '_').lower()
 
     def reset_screen(self):
+        """reset_screen.
+
+        This function resets the page accordingly so that it can be used again in the future
+        """
+
         # Unselect the currently picked cell
         self.main_table_view.selectedItems()[0].setSelected(False)
 
@@ -200,13 +240,29 @@ class TrainingDrillProfileSelectionScreen(QWidget):
         self.next_page_button.setVisible(False)
 
     def get_selected_drill_profile(self):
+        """get_selected_drill_profile.
+
+        This function returns which drill profile is currently selected.
+        """
+
         return self.selected_drill_profile
 
     def get_window_title(self):
+        """Helper function to return this window's title
+
+        Returns:
+            [string]: This window's title
+        """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingDrillProfileSelectionScreen())
     win.show()
@@ -214,4 +270,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

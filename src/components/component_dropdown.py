@@ -1,3 +1,14 @@
+"""
+component_dropdown.py
+---
+This file contains the class required to configure the Dropdown object used throughout Ball-E's GUI app.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -12,7 +23,16 @@ finally:
 
 
 class Dropdown(QComboBox):
+    """Dropdown.
+
+    This class configures a generic QComboBox (i.e.: Dropdown) which is used throughout the GUI
+    """
+
     def __init__(self):
+        """__init__.
+
+        Configures the QComboBox object as designed
+        """
         super().__init__()
 
         self.dropdown_font = self.font()

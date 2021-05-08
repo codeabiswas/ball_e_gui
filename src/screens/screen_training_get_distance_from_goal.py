@@ -1,3 +1,14 @@
+"""
+screen_training_get_distance_from_goal.py
+---
+This file contains the TrainingGetDistanceFromGoalScreen class, which is where the user selects the distance from the goal from a dropdown.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -24,7 +35,7 @@ finally:
 
 
 class TrainingGetDistanceFromGoalScreen(QWidget):
-    """Screen to create, delete, and view Drill Profiles
+    """This class shows a dropdown to the user which allows them to select how far away Ball-E is from the goal (in yards)
 
     Args:
         QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
@@ -69,9 +80,21 @@ class TrainingGetDistanceFromGoalScreen(QWidget):
         self.setLayout(self.screen_layout)
 
     def update_distance(self, updated_dist):
+        """update_distance.
+
+        This function updates the distance selected from the dropdown
+
+        :param updated_dist: String value of the number in the dropdown
+        """
+
         self.curr_dist = updated_dist
 
     def get_goal_distance(self):
+        """get_goal_distance.
+
+        This function returns the current goal distance that the user has selected in feet
+        """
+
         # Return the distance in ft.
         return self.curr_dist*3
 
@@ -81,10 +104,16 @@ class TrainingGetDistanceFromGoalScreen(QWidget):
         Returns:
             [string]: This window's title
         """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingGetDistanceFromGoalScreen())
     win.show()
@@ -92,4 +121,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

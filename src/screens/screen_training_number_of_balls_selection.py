@@ -1,3 +1,14 @@
+"""
+screen_training_number_of_balls_selection.py
+---
+This file contains the TrainingNumberOfBallsSelectionScreen class, which is where the user can select how many balls are in Ball-E's queue.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -24,14 +35,19 @@ finally:
 
 
 class TrainingNumberOfBallsSelectionScreen(QWidget):
-    """Screen to create, delete, and view Drill Profiles
+    """Screen to allow the user to select the number of balls in Ball-E's Queue
 
     Args:
         QWidget ([PyQt5 Widget]): This object will be used by the Main Window to show on screen
     """
 
     def __init__(self, prev_screen, drill_name=None):
-        """Widget Initialization
+        """__init__.
+
+        Widget Initialization
+
+        :param prev_screen: String name of the previous screen before coming to this screen
+        :param drill_name: String name of the drill name being run if it is an Automated Training Session, otherwise None.
         """
         super().__init__()
 
@@ -90,18 +106,41 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         self.setLayout(self.screen_layout)
 
     def get_drill_required_balls(self):
+        """get_drill_required_balls.
+
+        This function returns the required number of balls for a Drill if it is an Automated Training Session
+        """
+
         drill_plan = self.profiler.get_profile_info(self.drill_tbe_path)
         return len(drill_plan)
 
     def update_number_of_balls(self, updated_ball_number, prev_screen):
+        """update_number_of_balls.
+
+        This function updates the number of balls selected from the dropdown
+
+        :param updated_ball_number: Integer value which updates the number of balls from the dropdown
+        :param prev_screen: String name of the previous screen
+        """
+
         self.curr_ball_num = updated_ball_number
         if prev_screen == "training_screen":
             self.next_page_button.setVisible(True)
 
     def get_session_ball_number(self):
+        """get_session_ball_number.
+
+        This function returns the number of balls currently selected by the user in Ball-E's queue
+        """
+
         return self.curr_ball_num
 
     def check_ball_requirement(self):
+        """check_ball_requirement.
+
+        This function ensures that the ball number requirement by the drill is met by the number of balls in the queue if it is an Automated Training Session
+        """
+
         if self.curr_ball_num < self.get_drill_required_balls():
             self.enough_balls_label.setText(
                 "Selected drill requires {} balls. Please fill at least that many then try again.".format(self.get_drill_required_balls()))
@@ -113,6 +152,10 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         self.enough_balls_label.setVisible(True)
 
     def reset_screen(self):
+        """reset_screen.
+
+        This function resets the screen so that it can be used in the future
+        """
 
         self.enough_balls_label.setVisible(False)
 
@@ -122,10 +165,16 @@ class TrainingNumberOfBallsSelectionScreen(QWidget):
         Returns:
             [string]: This window's title
         """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     # win = TestWindow(TrainingNumberOfBallsSelectionScreen(
     #     prev_screen="training_screen"))
@@ -136,4 +185,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

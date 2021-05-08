@@ -1,3 +1,14 @@
+"""
+screen_goalie_profiles.py
+---
+This file contains the GoalieProfilesScreen class, which is the main widget that allows user to manage goalie profiles for Ball-E.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -198,6 +209,12 @@ class GoalieProfilesScreen(QWidget):
         self.curr_goalie_profiles_len = len(self.goalie_profiles)
 
     def choose_main_table_click_action(self, item):
+        """choose_main_table_click_action.
+
+        This function is the main action that occurs after one of the table's cells has been clicked
+
+        :param item: The object that was clicked in the table
+        """
         # Unselect the currently picked cell
         self.main_table_view.selectedItems()[0].setSelected(False)
 
@@ -427,6 +444,11 @@ class GoalieProfilesScreen(QWidget):
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(GoalieProfilesScreen())
     win.show()
@@ -434,4 +456,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

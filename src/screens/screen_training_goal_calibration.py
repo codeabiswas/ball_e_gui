@@ -1,3 +1,14 @@
+"""
+screen_training_goal_calibration.py
+---
+This file contains the TrainingGoalCalibrationScreen class, which is where the user calibrates Ball-E with the goal.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -25,7 +36,19 @@ finally:
 
 
 class TrainingGoalCalibrationScreen(QWidget):
+    """TrainingGoalCalibrationScreen.
+
+    This class makes the user go through the process of selecting points around the goal and then the algorithm can figure out how far away Ball-E is from the goal.
+    """
+
     def __init__(self, parent=None):
+        """__init__.
+
+        Widget initialization
+
+        :param parent: Default arg.
+        """
+
         super().__init__(parent=parent)
 
         self.window_title = "Goal Calibration"
@@ -78,12 +101,20 @@ class TrainingGoalCalibrationScreen(QWidget):
         self.setLayout(screen_layout)
 
     def update_lax_goal_pic(self):
+        """update_lax_goal_pic.
+
+        This function updates the QLabel object with the actual image of the goal that the user took from the previous page.
+        """
         self.pixmap_object = QPixmap()
         self.pixmap_object.load(self.lax_goal_img_location)
         self.lax_goal_label.mousePressEvent = self.draw_user_input
         self.lax_goal_label.setPixmap(self.pixmap_object)
 
     def reset_lines(self):
+        """reset_lines.
+
+        This function 'erases' all the points that the user drew and erases all the lines created so that the process can be started again.
+        """
         # Reset click counter
         self.click_counter = 0
 
@@ -104,6 +135,13 @@ class TrainingGoalCalibrationScreen(QWidget):
             "Please select the 4 corners of the goal, going clockwise from the top-left corner")
 
     def draw_user_input(self, event):
+        """draw_user_input.
+
+        This function gets where the user clicked and then draws circles to indicate the points that the user clicked on.
+
+        :param event: The mouse click event which contains the x-and-y coordinates
+        """
+
         x_coord = event.pos().x()
         y_coord = event.pos().y()
 
@@ -147,6 +185,10 @@ class TrainingGoalCalibrationScreen(QWidget):
                     "Distance Calculated: {%.2f} ft.\nThese will be your bounds. If you would like to redo this, click on the Reset button".format(goal_distance))
 
     def draw_lines(self):
+        """draw_lines.
+
+        This function draws the lines dividing the goal image into 9 sections given the points that the user clicked on.
+        """
 
         painter_obj = QPainter(self.pixmap_object)
         painter_obj.setPen(QPen(Qt.green, 12, Qt.SolidLine))
@@ -203,13 +245,29 @@ class TrainingGoalCalibrationScreen(QWidget):
         self.lax_goal_label.setPixmap(self.pixmap_object)
 
     def get_goal_distance(self):
+        """get_goal_distance.
+
+        This function returns the goal distance calculated in inches
+        """
+
         return self.goal_distance/12
 
     def get_window_title(self):
+        """Helper function to return this window's title
+
+        Returns:
+            [string]: This window's title
+        """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingGoalCalibrationScreen())
     win.show()
@@ -217,4 +275,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

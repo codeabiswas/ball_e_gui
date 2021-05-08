@@ -1,3 +1,14 @@
+"""
+style_constants.py
+---
+This file contains mainly style constants that are used throughout the GUI to maintain coherence across the design style of Ball-E's app.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 import sys
 
 from PyQt5.QtWidgets import QApplication, QDesktopWidget

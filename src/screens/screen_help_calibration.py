@@ -1,3 +1,14 @@
+"""
+screen_help_calibration.py
+---
+This file contains the CalibrationHelpScreen class, which is the Help Screen regarding Goal Calibration in Ball-E's GUI.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -21,7 +32,19 @@ finally:
 
 
 class CalibrationHelpScreen(QWidget):
+    """CalibrationHelpScreen.
+
+    This class instantiates and sets up the QWidget object with all appropriate Questions and Answers regarding Goal Calibration
+    """
+
     def __init__(self, parent=None):
+        """__init__.
+
+        Initializes the widget accordingly
+
+        :param parent: Default arg.
+        """
+
         super().__init__(parent=parent)
 
         self.window_title = "Help: Calibration"
@@ -48,6 +71,11 @@ class CalibrationHelpScreen(QWidget):
         self.setLayout(screen_layout)
 
     def pop_up_generator(self):
+        """pop_up_generator.
+
+        Generates a modal object with the answer to the question that the user clicked on.
+        """
+
         selected_data = self.scroll.selectedIndexes()[0]
 
         modal_info_layout = QVBoxLayout()
@@ -63,10 +91,21 @@ class CalibrationHelpScreen(QWidget):
         )
 
     def get_window_title(self):
+        """Helper function to return this window's title
+
+        Returns:
+            [string]: This window's title
+        """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(CalibrationHelpScreen())
     win.show()
@@ -74,4 +113,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

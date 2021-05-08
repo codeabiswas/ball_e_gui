@@ -1,3 +1,14 @@
+"""
+screen_training_session_complete.py
+---
+This file contains the TrainingSessionCompleteScreen class, which is displayed when a Automated or a Manual Training Session is complete/Stopped.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -19,7 +30,19 @@ finally:
 
 
 class TrainingSessionCompleteScreen(QWidget):
+    """TrainingSessionCompleteScreen.
+
+    This class instantiates the screen which notifies the user that the training session is complete
+    """
+
     def __init__(self, parent=None):
+        """__init__.
+
+        Widget initialization
+
+        :param parent: Default arg.
+        """
+
         super().__init__(parent=parent)
 
         self.window_title = "Training Complete"
@@ -40,6 +63,11 @@ class TrainingSessionCompleteScreen(QWidget):
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(TrainingSessionCompleteScreen())
     win.show()
@@ -47,4 +75,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()

@@ -80,3 +80,8 @@ To install this project's required packages:
 
 To update this project's required packages
 `pip freeze > requirements.txt`
+
+## Acknowledgements and Usage Agreement
+This code is written for the P21390 Project for Rochester Institute of Technology's, Kate Gleason College of Engineering's, Multidisciplinary Senior Design class. You may use and edit the contents of this code freely in your own projects as long as the following is mentioned in your source code/documentation at least once:
+* This [Confluence page's URL](https://wiki.rit.edu/display/MSDShowcase/P21390+Bi-Axial+Autonomous+Lacrosse+Learning+Evaluator) which talks about the project
+

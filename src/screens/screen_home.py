@@ -1,3 +1,14 @@
+"""
+screen_home.py
+---
+This file contains the HomeScreen class, which is the Home Screen in Ball-E's GUI.
+---
+
+Author: Andrei Biswas (@codeabiswas)
+Date: May 4, 2021
+Last Modified: May 08, 2021
+"""
+
 try:
     import pathlib
     import sys
@@ -18,7 +29,19 @@ finally:
 
 
 class HomeScreen(QWidget):
+    """HomeScreen.
+
+    This class instantiates and sets up the QWidget object as designed for the Home Screen.
+    """
+
     def __init__(self, parent=None):
+        """__init__.
+
+        Initializes the widget accordingly
+
+        :param parent: Default arg.
+        """
+
         super().__init__(parent=parent)
 
         self.window_title = "Home"
@@ -52,15 +75,29 @@ class HomeScreen(QWidget):
         self.setLayout(home_screen_layout)
 
     def OnClickPowerOffButton(self):
-        # os.system("shutdown -s -t 0")
+        """OnClickPowerOffButton.
+
+        This functions turns off the Jetson Nano after the user clicks on the Power-Off Button
+        """
+
         os.system("systemctl poweroff")
-        # sys.exit()
 
     def get_window_title(self):
+        """Helper function to return this window's title
+
+        Returns:
+            [string]: This window's title
+        """
+
         return self.window_title
 
 
 def main():
+    """main.
+
+    Main prototype/testing area. Code prototyping and checking happens here. 
+    """
+
     app = QApplication(sys.argv)
     win = TestWindow(HomeScreen())
     win.show()
@@ -68,4 +105,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Run the main function
     main()
