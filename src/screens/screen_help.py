@@ -55,13 +55,13 @@ class HelpScreen(QWidget):
         self.calibration_screen_button = FullPageButton("Calibration")
         self.training_screen_button = FullPageButton("Training")
         self.profiles_screen_button = FullPageButton("Profiles")
-        self.session_recording_screen_button = FullPageButton(
-            "Session Recording")
+        self.using_ball_e_screen_button = FullPageButton(
+            "Using Ball-E")
 
         screen_layout.addWidget(self.calibration_screen_button)
         screen_layout.addWidget(self.training_screen_button)
         screen_layout.addWidget(self.profiles_screen_button)
-        screen_layout.addWidget(self.session_recording_screen_button)
+        screen_layout.addWidget(self.using_ball_e_screen_button)
 
         self.setLayout(screen_layout)
 
@@ -78,7 +78,7 @@ class HelpScreen(QWidget):
 def main():
     """main.
 
-    Main prototype/testing area. Code prototyping and checking happens here. 
+    Main prototype/testing area. Code prototyping and checking happens here.
     """
     app = QApplication(sys.argv)
     win = TestWindow(HelpScreen())
