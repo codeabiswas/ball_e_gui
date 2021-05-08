@@ -47,7 +47,7 @@ class UsingBallEHelpScreen(QWidget):
 
         super().__init__(parent=parent)
 
-        self.window_title = "Help: Session Recording"
+        self.window_title = "Help: Using Ball-E"
 
         # Get the docs for this section
         doc_reader = hdr.DocReader(
