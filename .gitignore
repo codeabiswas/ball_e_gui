@@ -1,0 +1,11 @@
+# Virtual Env
+env/
+
+# Python Default Files
+__pycache__/
+
+# Temporary Files
+src/images/temp_training_lax_goal.png
+
+# VSCode Settings
+.vscode/
