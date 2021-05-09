@@ -86,7 +86,6 @@ class ToolbarTitle(QLabel):
         self.setAlignment(Qt.AlignCenter)
 
 
-
 class ToolbarComponent(QWidget):
     """ToolbarComponent.
 

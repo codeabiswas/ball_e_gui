@@ -32,7 +32,6 @@ class Modal(QDialog):
     This class configures the QDialog object that is used throughout the GUI as the main modal object.
     """
 
-
     def __init__(self, type, layout, window_title):
         """__init__.
 

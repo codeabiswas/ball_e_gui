@@ -132,7 +132,7 @@ class TrainingManualSessionScreen(QWidget):
 
     def lax_goal_image_setup(self):
         """lax_goal_image_setup.
-        
+
         This function sets up the lacrosse goal image such that the user can interact with the sections when shooting out a ball
         """
 

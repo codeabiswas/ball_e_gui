@@ -53,7 +53,7 @@ class VideoThread(QThread):
 
     def run(self):
         """run.
-        
+
         Captures the video stream
         """
 

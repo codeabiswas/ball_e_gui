@@ -577,7 +577,7 @@ class DrillProfilesScreen(QWidget):
         """update_total_drill_balls.
 
         Updates the number of balls for the drill profile from the dropwdown
-        
+
         :param updated_drill_balls: String value of the dropdown
         """
         self.curr_drill_balls = updated_drill_balls

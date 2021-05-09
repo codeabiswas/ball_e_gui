@@ -38,7 +38,6 @@ class DrillCreationWidget(QWidget):
     This class configures and creates all required components and logic to create drills.
     """
 
-
     def __init__(self, local_location, ball_number):
         """__init__.
 

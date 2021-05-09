@@ -18,6 +18,7 @@ class TestWindow(QMainWindow):
 
     This class creates a frameless window around a given QWidget object.
     """
+
     def __init__(self, some_widget, parent=None):
         """__init__.
 

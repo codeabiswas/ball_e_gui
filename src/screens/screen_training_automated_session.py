@@ -107,7 +107,7 @@ class TrainingAutomatedSessionScreen(QWidget):
 
     def on_click_start_button(self):
         """on_click_start_button.
-        
+
         This function starts the drill session when the 'Start' button is clicked
         """
 

@@ -31,7 +31,7 @@ class Profiler():
 
     def get_profiles(self):
         """get_profiles.
-        
+
         Lists all the profiles in the directory
         """
 
