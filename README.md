@@ -83,8 +83,8 @@ To update this project's required packages
 
 ## Miscellaneous
 If required:
-* Username: nanobot
-* Password: nanobot
+* **Username:** nanobot
+* **Password:** nanobot
 
 
 ## Acknowledgements and Usage Agreement
